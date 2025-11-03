@@ -110,22 +110,12 @@ node http-wrapper.js
 
 ## Вариант 3: Прямая интеграция через Code Node
 
-### Импортируйте модуль прямо в n8n
+### Импорт через файловую систему
 
-В n8n Code Node используйте код из `simple-calculations.js`:
+Если n8n запущен локально и установлены build tools:
 
 ```javascript
-// Код расчета Human Design
-const calculateHumanDesign = async ({ birthDate, birthTime, birthLocation }) => {
-  const birthDateObj = new Date(`${birthDate}T${birthTime}`);
-  
-  // Импортируйте функции из simple-calculations.js
-  // или вставьте код напрямую
-  
-  return {
-    // результат расчета
-  };
-};
+const { calculateHumanDesign } = require('/path/to/human_design/src/calculations-cjs.cjs');
 
 const result = await calculateHumanDesign({
   birthDate: $input.item.json.birthDate,
@@ -136,21 +126,7 @@ const result = await calculateHumanDesign({
 return { json: result };
 ```
 
-### Импорт через файловую систему
-
-Если n8n запущен локально, вы можете импортировать модуль:
-
-```javascript
-const { calculateHumanDesignSimple } = require('/path/to/human_design/src/simple-calculations.js');
-
-const result = await calculateHumanDesignSimple({
-  birthDate: $input.item.json.birthDate,
-  birthTime: $input.item.json.birthTime,
-  birthLocation: $input.item.json.birthLocation,
-});
-
-return { json: result };
-```
+**Примечание:** Для n8n рекомендуется использовать HTTP API через Railway, чтобы избежать проблем с компиляцией Swiss Ephemeris на сервере n8n.
 
 ## Вариант 4: Использование готового workflow
 

@@ -265,7 +265,9 @@ return {
 // api-server.js
 import express from 'express';
 import cors from 'cors';
-import { calculateHumanDesign } from './src/simple-calculations.js';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const { calculateHumanDesign } = require('./src/calculations-cjs.cjs');
 
 const app = express();
 app.use(cors());

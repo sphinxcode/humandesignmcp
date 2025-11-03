@@ -8,17 +8,17 @@
 
 ```
 human_design/
-├── index.js                      # MCP Server точка входа
+├── http-server.js                # HTTP Server для Railway/n8n
+├── index-with-swiss.js           # MCP Server через stdio
 ├── package.json                  # Зависимости проекта
 ├── .gitignore                    # Git ignore rules
 ├── README.md                     # Полная документация
 ├── QUICKSTART.md                 # Быстрый старт за 5 минут
-├── INTEGRATION.md                # Интеграция с n8n
+├── RAILWAY_DEPLOY.md            # Инструкция по деплою на Railway
+├── N8N_SETUP.md                 # Интеграция с n8n
 ├── EXAMPLES.md                   # Примеры использования
-├── n8n-example-workflow.json     # Готовый workflow для n8n
 └── src/
-    ├── calculations.js           # Полная версия с Swiss Ephemeris
-    └── simple-calculations.js    # Упрощенная версия (используется)
+    └── calculations-cjs.cjs     # Расчеты Swiss Ephemeris
 ```
 
 ## Возможности
@@ -50,8 +50,7 @@ human_design/
 
 - **Node.js >= 18** с ES modules
 - **MCP SDK** для совместимости с Model Context Protocol
-- **Swiss Ephemeris** для точных расчетов (опционально)
-- **Упрощенная версия** для быстрого тестирования
+- **Swiss Ephemeris** для точных расчетов (обязательно)
 - **JSON-RPC 2.0** протокол для MCP
 - **No linter errors** ✅
 
@@ -77,8 +76,8 @@ echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | node index.js
 Или используйте в Code Node:
 
 ```javascript
-const { calculateHumanDesignSimple } = require('./src/simple-calculations.js');
-const result = await calculateHumanDesignSimple({
+const { calculateHumanDesign } = require('./src/calculations-cjs.cjs');
+const result = await calculateHumanDesign({
   birthDate: '1990-05-15',
   birthTime: '14:30',
   birthLocation: 'Москва, Россия'
@@ -121,12 +120,11 @@ const result = await calculateHumanDesignSimple({
 
 ### Для production:
 
-1. Настройте Swiss Ephemeris для точных расчетов
+1. Swiss Ephemeris уже настроен для точных расчетов
 2. Добавьте authentication
-3. Используйте внешний Human Design API
-4. Настройте rate limiting
-5. Добавьте кэширование
-6. Разверните через Docker
+3. Настройте rate limiting
+4. Добавьте кэширование
+5. Задеплойте на Railway
 
 ### Для разработки:
 
@@ -161,7 +159,7 @@ MIT
 
 ✅ **Готово к использованию**
 
-Все основные функции реализованы и протестированы. Проект готов для интеграции с n8n.
+Все основные функции реализованы и протестированы. Проект использует Swiss Ephemeris для точных расчетов и готов для интеграции с n8n и деплоя на Railway.
 
 ---
 

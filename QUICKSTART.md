@@ -156,5 +156,5 @@ curl -X POST http://localhost:5678/webhook/human-design \
 
 ## Важно
 
-Текущая версия использует упрощенные расчеты для демонстрации. Для production используйте полную версию с Swiss Ephemeris или внешний Human Design API.
+Проект использует Swiss Ephemeris для точных расчетов Human Design. При установке потребуется компиляция нативных модулей (2-3 минуты).
 
