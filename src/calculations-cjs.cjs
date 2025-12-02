@@ -1,11 +1,12 @@
 /**
  * Human Design Calculations with Swiss Ephemeris (CommonJS version)
- * Модуль для точного расчета карты Human Design
+ * Модуль для точного расчета карты Human Design - FIXED GATE MAPPING
  */
 
 // Импорт для расчета позиций планет (CommonJS)
 const swisseph = require('swisseph');
 const { getLocationInfo, getUTCOffset, convertToUTC } = require('./timezone-utils.cjs');
+const { longitudeToGate } = require('./gate-mapping.cjs');
 
 // Set ephemeris path for Moshier (built-in, no files needed)
 swisseph.swe_set_ephe_path(__dirname);
@@ -115,33 +116,40 @@ function getPlanetIndex(planetName) {
 function calculatePlanetPositionAsync(jd, planetName, callback) {
   const planetIndex = getPlanetIndex(planetName);
   const flags = swisseph.SEFLG_SPEED | swisseph.SEFLG_MOSEPH; // Use Moshier (no files needed)
-  
+
   swisseph.swe_calc_ut(jd, planetIndex, flags, function(body) {
     if (body.error) {
       callback(new Error(body.error), null);
       return;
     }
-    
+
     const longitude = body.longitude;
-    
+
     // Handle Ketu (opposite of Rahu)
     const actualLongitude = planetName === 'Ketu' ? (longitude + 180) % 360 : longitude;
-    
-    // Human Design gate calculation
-    const gateNumber = Math.floor(actualLongitude / 5.625) + 1;
-    const gate = gateNumber > 64 ? 64 : gateNumber;
-    const degreeInGate = actualLongitude % 5.625;
-    const line = Math.floor(degreeInGate / 0.9375) + 1;
-    const sign = Math.floor(actualLongitude / 30) + 1;
-    
+
+    // Human Design gate calculation using correct gate mapping
+    const gateData = longitudeToGate(actualLongitude);
+
+    if (!gateData) {
+      callback(new Error(`Failed to map longitude ${actualLongitude}° to gate`), null);
+      return;
+    }
+
+    const gate = gateData.gate;
+    const line = gateData.line;
+    const sign = gateData.signNum;
+    const signName = gateData.sign;
+
     callback(null, {
       name: planetName,
       longitude: actualLongitude,
       sign: sign,
+      signName: signName,
       gate: gate,
       line: line,
       gateInfo: GATES[gate] || { name: 'Unknown', ru_name: 'Неизвестно' },
-      color: degreeInGate / 0.9375,
+      degreeInSign: gateData.degreeInSign,
     });
   });
 }
@@ -154,7 +162,7 @@ function determineType(gates) {
   const hasSacral = CENTER_GATES.Sacral.some(g => gateNumbers.includes(g));
   const hasThroat = CENTER_GATES.Throat.some(g => gateNumbers.includes(g));
   const hasSolarPlexus = CENTER_GATES.SolarPlexus.some(g => gateNumbers.includes(g));
-  
+
   if (hasSacral && hasThroat) {
     return { name: 'Manifesting Generator', ru_name: 'Манифестирующий Генератор' };
   } else if (hasSacral) {
@@ -205,13 +213,13 @@ async function calculateHumanDesign({ birthDate, birthTime, birthLocation, latit
   try {
     const [year, month, day] = birthDate.split('-').map(Number);
     const [hour, minute] = birthTime.split(':').map(Number);
-    
+
     const locationInfo = getLocationInfo(birthLocation);
     const utcOffset = getUTCOffset(birthLocation, birthDate);
     const utcData = convertToUTC(birthDate, birthTime, birthLocation);
-    
+
     console.log(`Timezone: ${locationInfo.tz}, UTC offset: ${utcOffset}`);
-    
+
     // Calculate Julian Day (async with callback)
     return new Promise((resolve, reject) => {
       swisseph.swe_julday(
@@ -222,10 +230,10 @@ async function calculateHumanDesign({ birthDate, birthTime, birthLocation, latit
         swisseph.SE_GREG_CAL,
         function(jd) {
           console.log('Julian Day:', jd);
-          
+
           // Calculate all planets
           const planets = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Rahu', 'Ketu'];
-          const promises = planets.map(planet => 
+          const promises = planets.map(planet =>
             new Promise((res, rej) => {
               calculatePlanetPositionAsync(jd, planet, (err, result) => {
                 if (err) rej(err);
@@ -233,7 +241,7 @@ async function calculateHumanDesign({ birthDate, birthTime, birthLocation, latit
               });
             })
           );
-          
+
           Promise.all(promises)
             .then(planetPositions => {
               const gates = planetPositions.map(p => ({
@@ -243,14 +251,15 @@ async function calculateHumanDesign({ birthDate, birthTime, birthLocation, latit
                 line: p.line,
                 planet: p.name,
                 sign: p.sign,
+                signName: p.signName,
                 hexagram: p.gateInfo.hexagram,
               }));
-              
+
               const type = determineType(gates);
               const profile = determineProfile(planetPositions);
               const authority = determineAuthority(planetPositions);
               const definedCenters = getDefinedCenters(gates);
-              
+
               const strategies = {
                 'Manifestor': 'Информировать',
                 'Generator': 'Отвечать',
@@ -258,7 +267,7 @@ async function calculateHumanDesign({ birthDate, birthTime, birthLocation, latit
                 'Projector': 'Ждать приглашения',
                 'Reflector': 'Ждать полного лунного цикла',
               };
-              
+
               resolve({
                 birthDate,
                 birthTime,
@@ -277,11 +286,12 @@ async function calculateHumanDesign({ birthDate, birthTime, birthLocation, latit
                   planet: p.name,
                   longitude: p.longitude,
                   sign: p.sign,
+                  signName: p.signName,
                   gate: p.gate,
                   line: p.line,
                 })),
-                calculationSource: 'Swiss Ephemeris (Moshier)',
-                version: '1.0.0-full',
+                calculationSource: 'Swiss Ephemeris (Moshier) + Correct Gate Mapping',
+                version: '1.0.1-fixed',
               });
             })
             .catch(reject);
