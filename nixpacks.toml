@@ -1,11 +1,9 @@
 # Nixpacks configuration for Railway
-# Multi-language support
 providers = ["node"]
 
 [phases.setup]
-# Use Python 3.11 instead of python3 (3.12) to avoid distutils removal issue
-# swisseph requires distutils which was removed in Python 3.12
-nixPkgs = ["nodejs-18_x", "python311", "gcc", "gnumake", "pkgconfig"]
+# Python 3.11 Full (includes distutils) for swisseph compilation
+nixPkgs = ["nodejs-18_x", "python311Full", "gcc", "gnumake", "pkg-config"]
 
 [phases.install]
 cmds = ["npm ci"]
