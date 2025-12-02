@@ -241,8 +241,13 @@ async function calculateAllPlanets(julianDay) {
 /**
  * Calculate complete Human Design chart
  */
-async function calculateHumanDesign(birthDate, birthTime, birthLocation) {
+async function calculateHumanDesign(params) {
   try {
+    // Extract parameters (support both object and individual params for backwards compatibility)
+    const birthDate = params.birthDate || params;
+    const birthTime = params.birthTime || arguments[1];
+    const birthLocation = params.birthLocation || arguments[2];
+
     // Get location info
     const locationInfo = getLocationInfo(birthLocation);
     if (!locationInfo) {
