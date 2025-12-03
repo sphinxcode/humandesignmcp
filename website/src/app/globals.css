@@ -1,0 +1,289 @@
+@import "tailwindcss";
+
+:root {
+  /* Primary - Warm Sunset Tones */
+  --coral-sunset: #FF7F6B;
+  --golden-hour: #D4A574;
+  --sacred-gold: #C9A227;
+  --blush-pink: #F4A5A5;
+
+  /* Backgrounds - Light & Airy */
+  --lotus-white: #FFF8F5;
+  --temple-cream: #F5EDE4;
+  --soft-blush: #FFE4E1;
+
+  /* Text */
+  --deep-maroon: #8B4557;
+  --warm-brown: #6B4423;
+  --charcoal: #2D2D2D;
+
+  /* Nature Accents */
+  --sage-green: #9CAF88;
+  --terracotta: #C4785B;
+
+  /* Bodygraph Specific */
+  --center-defined: #D4A574;
+  --center-undefined: #E8DDD4;
+  --personality-black: #1A1A1A;
+  --design-gold: #C9A227;
+
+  /* Gradients */
+  --gradient-sunrise: linear-gradient(135deg, var(--coral-sunset) 0%, var(--golden-hour) 50%, var(--temple-cream) 100%);
+  --gradient-gold: linear-gradient(135deg, var(--sacred-gold) 0%, var(--golden-hour) 100%);
+}
+
+@theme inline {
+  /* Colors */
+  --color-coral-sunset: var(--coral-sunset);
+  --color-golden-hour: var(--golden-hour);
+  --color-sacred-gold: var(--sacred-gold);
+  --color-blush-pink: var(--blush-pink);
+  --color-lotus-white: var(--lotus-white);
+  --color-temple-cream: var(--temple-cream);
+  --color-soft-blush: var(--soft-blush);
+  --color-deep-maroon: var(--deep-maroon);
+  --color-warm-brown: var(--warm-brown);
+  --color-charcoal: var(--charcoal);
+  --color-sage-green: var(--sage-green);
+  --color-terracotta: var(--terracotta);
+  --color-center-defined: var(--center-defined);
+  --color-center-undefined: var(--center-undefined);
+  --color-personality-black: var(--personality-black);
+  --color-design-gold: var(--design-gold);
+
+  /* Fonts */
+  --font-sans: var(--font-quicksand);
+  --font-accent: var(--font-great-vibes);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--lotus-white);
+  color: var(--warm-brown);
+  font-family: var(--font-quicksand), sans-serif;
+  min-height: 100vh;
+}
+
+/* Typography utilities */
+.font-accent {
+  font-family: var(--font-great-vibes), cursive;
+}
+
+/* Button styles */
+.btn-primary {
+  background: var(--gradient-gold);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(201, 162, 39, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 162, 39, 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--deep-maroon);
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  border: 2px solid var(--golden-hour);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--golden-hour);
+  color: white;
+}
+
+/* Card styles */
+.card {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(139, 69, 87, 0.08);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 30px rgba(139, 69, 87, 0.12);
+  transform: translateY(-4px);
+}
+
+/* Gradient backgrounds */
+.bg-gradient-sunrise {
+  background: var(--gradient-sunrise);
+}
+
+/* Gold glow effect */
+.glow-gold {
+  box-shadow: 0 0 30px rgba(201, 162, 39, 0.3);
+}
+
+/* Animated underline */
+.underline-animate {
+  position: relative;
+}
+
+.underline-animate::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--golden-hour);
+  transition: width 0.3s ease;
+}
+
+.underline-animate:hover::after {
+  width: 100%;
+}
+
+/* Floral decorative element */
+.floral-decoration {
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* Center types - for bodygraph */
+.center-defined {
+  fill: var(--center-defined);
+  stroke: var(--sacred-gold);
+  stroke-width: 2;
+}
+
+.center-undefined {
+  fill: white;
+  stroke: var(--center-undefined);
+  stroke-width: 2;
+}
+
+/* Gate markers */
+.gate-personality {
+  fill: var(--personality-black);
+}
+
+.gate-design {
+  fill: var(--design-gold);
+}
+
+.gate-both {
+  fill: url(#gate-split-gradient);
+}
+
+/* Channel paths */
+.channel-active {
+  stroke: var(--sacred-gold);
+  stroke-width: 3;
+}
+
+.channel-inactive {
+  stroke: var(--center-undefined);
+  stroke-width: 2;
+  stroke-dasharray: 4 2;
+}
+
+/* Tooltip styles */
+.tooltip {
+  background: white;
+  border: 1px solid var(--golden-hour);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 20px rgba(139, 69, 87, 0.15);
+}
+
+/* Smooth page transitions */
+.page-transition {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Floating animation for decorative elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Pulse glow for CTAs */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(201, 162, 39, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(201, 162, 39, 0.5);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* Form inputs */
+input, select, textarea {
+  background: white;
+  border: 2px solid var(--center-undefined);
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--golden-hour);
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.2);
+}
+
+input::placeholder {
+  color: #999;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--temple-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--golden-hour);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sacred-gold);
+}
