@@ -133,7 +133,7 @@ function transformChartData(apiData: any, birthData: BirthData) {
     authority: apiData.authority || 'Sacral',
     profile: apiData.profile || '1/3',
     definition: determineDefinition(activeChannels),
-    incarnationCross: generateIncarnationCross(apiData.personality),
+    incarnationCross: apiData.incarnationCross?.name || generateIncarnationCross(apiData.personality),
 
     // Activations
     personality: apiData.personality || {},
