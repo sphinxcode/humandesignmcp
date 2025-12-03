@@ -147,6 +147,7 @@ export interface CenterConfig {
   height: number;
   color: string;
   gates: number[];
+  theme: string;
 }
 
 export const CENTER_CONFIG: CenterConfig[] = [
@@ -159,7 +160,8 @@ export const CENTER_CONFIG: CenterConfig[] = [
     width: 80,
     height: 70,
     color: '#FFCC00',
-    gates: [64, 61, 63]
+    gates: [64, 61, 63],
+    theme: 'Inspiration & mental pressure'
   },
   {
     id: 'ajna',
@@ -170,7 +172,8 @@ export const CENTER_CONFIG: CenterConfig[] = [
     width: 90,
     height: 80,
     color: '#D8C4A0',
-    gates: [47, 24, 4, 17, 11, 43]
+    gates: [47, 24, 4, 17, 11, 43],
+    theme: 'Awareness & conceptualization'
   },
   {
     id: 'throat',
@@ -181,7 +184,8 @@ export const CENTER_CONFIG: CenterConfig[] = [
     width: 100,
     height: 80,
     color: '#8F4A56',
-    gates: [62, 23, 56, 16, 20, 31, 8, 33, 35, 12, 45]
+    gates: [62, 23, 56, 16, 20, 31, 8, 33, 35, 12, 45],
+    theme: 'Communication & manifestation'
   },
   {
     id: 'g',
@@ -192,7 +196,8 @@ export const CENTER_CONFIG: CenterConfig[] = [
     width: 90,
     height: 90,
     color: '#FFCC00',
-    gates: [1, 7, 13, 10, 25, 15, 46, 2]
+    gates: [1, 7, 13, 10, 25, 15, 46, 2],
+    theme: 'Identity & direction'
   },
   {
     id: 'heart',
@@ -203,7 +208,8 @@ export const CENTER_CONFIG: CenterConfig[] = [
     width: 60,
     height: 55,
     color: '#FFD57D',
-    gates: [21, 51, 26, 40]
+    gates: [21, 51, 26, 40],
+    theme: 'Willpower & self-worth'
   },
   {
     id: 'spleen',
@@ -214,7 +220,8 @@ export const CENTER_CONFIG: CenterConfig[] = [
     width: 70,
     height: 90,
     color: '#6D5000',
-    gates: [48, 57, 44, 50, 32, 28, 18]
+    gates: [48, 57, 44, 50, 32, 28, 18],
+    theme: 'Intuition & survival'
   },
   {
     id: 'solar',
@@ -225,7 +232,8 @@ export const CENTER_CONFIG: CenterConfig[] = [
     width: 70,
     height: 90,
     color: '#6D5000',
-    gates: [36, 22, 37, 6, 49, 55, 30]
+    gates: [36, 22, 37, 6, 49, 55, 30],
+    theme: 'Emotions & feelings'
   },
   {
     id: 'sacral',
@@ -236,7 +244,8 @@ export const CENTER_CONFIG: CenterConfig[] = [
     width: 100,
     height: 80,
     color: '#8F4A56',
-    gates: [5, 14, 29, 59, 27, 34, 42, 3, 9]
+    gates: [5, 14, 29, 59, 27, 34, 42, 3, 9],
+    theme: 'Life force & work energy'
   },
   {
     id: 'root',
@@ -247,7 +256,8 @@ export const CENTER_CONFIG: CenterConfig[] = [
     width: 100,
     height: 80,
     color: '#FF5F57',
-    gates: [53, 60, 52, 19, 54, 38, 58, 39, 41]
+    gates: [53, 60, 52, 19, 54, 38, 58, 39, 41],
+    theme: 'Pressure & adrenaline'
   }
 ];
 
