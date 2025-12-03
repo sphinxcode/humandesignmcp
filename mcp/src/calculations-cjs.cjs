@@ -14,6 +14,7 @@ const swisseph = require('swisseph');
 const { getLocationInfo, getUTCOffset, convertToUTC } = require('./timezone-utils.cjs');
 const { longitudeToGate } = require('./gate-mapping.cjs');
 const { HARMONIC_GATES, CENTERS_BY_CHANNEL } = require('./channel-data.cjs');
+const { rightAngleCrosses, juxtapositionCrosses, leftAngleCrosses } = require('./incarnation-crosses-data.cjs');
 
 // Swiss Ephemeris planet constants
 const PLANETS = {
@@ -676,6 +677,9 @@ async function calculateHumanDesign(params) {
     // Perspective Tone is based on Personality Rahu (North Node) Tone
     const perspectiveTone = TONES[personality.Rahu.tone];
 
+    // Calculate Incarnation Cross
+    const incarnationCross = calculateIncarnationCross(personality, design);
+
     return {
       birthInfo: {
         date: birthDate,
@@ -688,6 +692,7 @@ async function calculateHumanDesign(params) {
       authority,
       definition,
       profile,
+      incarnationCross,
       variableType,
       phs: {
         digestion,
@@ -711,6 +716,76 @@ async function calculateHumanDesign(params) {
   } catch (error) {
     throw new Error(`Calculation failed: ${error.message}`);
   }
+}
+
+/**
+ * Calculate Incarnation Cross
+ */
+function calculateIncarnationCross(personality, design) {
+  // Get the 4 gates
+  const gates = [
+    personality.Sun.gate,
+    personality.Earth.gate,
+    design.Sun.gate,
+    design.Earth.gate
+  ];
+
+  // Get line numbers
+  const psLine = personality.Sun.line;
+  const dsLine = design.Sun.line;
+
+  // Determine cross type based on line numbers
+  let crossType;
+  if (psLine >= 5 && dsLine >= 3) {
+    crossType = 'Left Angle';
+  } else if (psLine >= 5 && dsLine < 3) {
+    crossType = 'Juxtaposition';
+  } else {
+    crossType = 'Right Angle';
+  }
+
+  // Look up the cross name
+  const crossName = lookupIncarnationCross(gates, crossType);
+
+  return {
+    name: crossName,
+    type: crossType,
+    gates: {
+      personalitySun: gates[0],
+      personalityEarth: gates[1],
+      designSun: gates[2],
+      designEarth: gates[3]
+    },
+    profile: `${psLine}/${dsLine}`
+  };
+}
+
+/**
+ * Look up incarnation cross name from gate combination
+ */
+function lookupIncarnationCross(gates, type) {
+  const databases = {
+    'Right Angle': rightAngleCrosses,
+    'Juxtaposition': juxtapositionCrosses,
+    'Left Angle': leftAngleCrosses
+  };
+
+  const db = databases[type];
+
+  // Find matching gate combination
+  const match = db.find(cross => {
+    return cross.gates[0] === gates[0] &&
+           cross.gates[1] === gates[1] &&
+           cross.gates[2] === gates[2] &&
+           cross.gates[3] === gates[3];
+  });
+
+  if (match) {
+    return match.name;
+  }
+
+  // If no exact match, return a generic name with the gates
+  return `${type} Cross (${gates[0]}/${gates[1]} | ${gates[2]}/${gates[3]})`;
 }
 
 module.exports = { calculateHumanDesign };
