@@ -135,88 +135,8 @@ export const GATE_KEYWORDS: Record<number, string> = {
   64: "Confusion"
 };
 
-// 36 Channels with their gates and connecting centers
-export interface ChannelData {
-  gates: [number, number];
-  centers: [string, string];
-  name: string;
-  type: 'Individual' | 'Collective' | 'Tribal';
-  circuit: string;
-}
-
-export const CHANNELS: ChannelData[] = [
-  // Head-Ajna
-  { gates: [64, 47], centers: ['head', 'ajna'], name: 'Abstraction', type: 'Collective', circuit: 'Sensing' },
-  { gates: [61, 24], centers: ['head', 'ajna'], name: 'Awareness', type: 'Individual', circuit: 'Knowing' },
-  { gates: [63, 4], centers: ['head', 'ajna'], name: 'Logic', type: 'Collective', circuit: 'Understanding' },
-
-  // Ajna-Throat
-  { gates: [17, 62], centers: ['ajna', 'throat'], name: 'Acceptance', type: 'Collective', circuit: 'Understanding' },
-  { gates: [43, 23], centers: ['ajna', 'throat'], name: 'Structuring', type: 'Individual', circuit: 'Knowing' },
-  { gates: [11, 56], centers: ['ajna', 'throat'], name: 'Curiosity', type: 'Collective', circuit: 'Sensing' },
-
-  // G-Throat
-  { gates: [7, 31], centers: ['g', 'throat'], name: 'The Alpha', type: 'Collective', circuit: 'Understanding' },
-  { gates: [1, 8], centers: ['g', 'throat'], name: 'Inspiration', type: 'Individual', circuit: 'Knowing' },
-  { gates: [13, 33], centers: ['g', 'throat'], name: 'The Prodigal', type: 'Collective', circuit: 'Sensing' },
-
-  // Integration channels (G-Throat, G-Sacral, G-Spleen)
-  { gates: [10, 20], centers: ['g', 'throat'], name: 'Awakening', type: 'Individual', circuit: 'Integration' },
-  { gates: [10, 34], centers: ['g', 'sacral'], name: 'Exploration', type: 'Individual', circuit: 'Integration' },
-  { gates: [10, 57], centers: ['g', 'spleen'], name: 'Perfected Form', type: 'Individual', circuit: 'Integration' },
-
-  // G-Heart
-  { gates: [25, 51], centers: ['g', 'heart'], name: 'Initiation', type: 'Individual', circuit: 'Centering' },
-
-  // Heart-Throat
-  { gates: [21, 45], centers: ['heart', 'throat'], name: 'Money', type: 'Tribal', circuit: 'Ego' },
-
-  // Heart-Spleen
-  { gates: [26, 44], centers: ['heart', 'spleen'], name: 'Surrender', type: 'Tribal', circuit: 'Ego' },
-
-  // Heart-Solar Plexus
-  { gates: [40, 37], centers: ['heart', 'solar'], name: 'Community', type: 'Tribal', circuit: 'Ego' },
-
-  // G-Sacral
-  { gates: [46, 29], centers: ['g', 'sacral'], name: 'Discovery', type: 'Collective', circuit: 'Sensing' },
-  { gates: [2, 14], centers: ['g', 'sacral'], name: 'The Beat', type: 'Individual', circuit: 'Knowing' },
-  { gates: [15, 5], centers: ['g', 'sacral'], name: 'Rhythm', type: 'Collective', circuit: 'Understanding' },
-
-  // Throat-Spleen
-  { gates: [16, 48], centers: ['throat', 'spleen'], name: 'The Wavelength', type: 'Collective', circuit: 'Understanding' },
-  { gates: [20, 57], centers: ['throat', 'spleen'], name: 'The Brainwave', type: 'Individual', circuit: 'Integration' },
-
-  // Throat-Solar Plexus
-  { gates: [12, 22], centers: ['throat', 'solar'], name: 'Openness', type: 'Individual', circuit: 'Knowing' },
-  { gates: [35, 36], centers: ['throat', 'solar'], name: 'Transitoriness', type: 'Collective', circuit: 'Sensing' },
-
-  // Spleen-Sacral
-  { gates: [50, 27], centers: ['spleen', 'sacral'], name: 'Preservation', type: 'Tribal', circuit: 'Defense' },
-  { gates: [57, 34], centers: ['spleen', 'sacral'], name: 'Power', type: 'Individual', circuit: 'Integration' },
-
-  // Throat-Sacral (Integration)
-  { gates: [34, 20], centers: ['sacral', 'throat'], name: 'Charisma', type: 'Individual', circuit: 'Integration' },
-
-  // Spleen-Root
-  { gates: [18, 58], centers: ['spleen', 'root'], name: 'Judgment', type: 'Collective', circuit: 'Understanding' },
-  { gates: [28, 38], centers: ['spleen', 'root'], name: 'Struggle', type: 'Individual', circuit: 'Knowing' },
-  { gates: [32, 54], centers: ['spleen', 'root'], name: 'Transformation', type: 'Tribal', circuit: 'Ego' },
-
-  // Solar Plexus-Sacral
-  { gates: [6, 59], centers: ['solar', 'sacral'], name: 'Intimacy', type: 'Tribal', circuit: 'Defense' },
-
-  // Solar Plexus-Root
-  { gates: [30, 41], centers: ['solar', 'root'], name: 'Recognition', type: 'Collective', circuit: 'Sensing' },
-  { gates: [49, 19], centers: ['solar', 'root'], name: 'Synthesis', type: 'Tribal', circuit: 'Defense' },
-  { gates: [55, 39], centers: ['solar', 'root'], name: 'Emoting', type: 'Individual', circuit: 'Knowing' },
-
-  // Sacral-Root
-  { gates: [3, 60], centers: ['sacral', 'root'], name: 'Mutation', type: 'Individual', circuit: 'Knowing' },
-  { gates: [9, 52], centers: ['sacral', 'root'], name: 'Concentration', type: 'Collective', circuit: 'Understanding' },
-  { gates: [42, 53], centers: ['sacral', 'root'], name: 'Maturation', type: 'Collective', circuit: 'Sensing' },
-];
-
-// Center shapes and positions for SVG (ViewBox: 0 0 360 520)
+// Center configuration with shape, position, and dimensions
+// ViewBox: 0 0 400 600
 export interface CenterConfig {
   id: string;
   name: string;
@@ -225,10 +145,8 @@ export interface CenterConfig {
   y: number;
   width: number;
   height: number;
-  gates: number[];
   color: string;
-  biologicalCorrelation: string;
-  theme: string;
+  gates: number[];
 }
 
 export const CENTER_CONFIG: CenterConfig[] = [
@@ -236,281 +154,405 @@ export const CENTER_CONFIG: CenterConfig[] = [
     id: 'head',
     name: 'Head',
     shape: 'triangle-up',
-    x: 180,
-    y: 36,
-    width: 70,
-    height: 42,
-    gates: [64, 61, 63],
+    x: 200,
+    y: 50,
+    width: 80,
+    height: 70,
     color: '#FFCC00',
-    biologicalCorrelation: 'Pineal Gland',
-    theme: 'Inspiration & Mental Pressure'
+    gates: [64, 61, 63]
   },
   {
     id: 'ajna',
     name: 'Ajna',
     shape: 'triangle-down',
-    x: 180,
-    y: 90,
-    width: 72,
-    height: 50,
-    gates: [47, 24, 4, 17, 43, 11],
+    x: 200,
+    y: 120,
+    width: 90,
+    height: 80,
     color: '#D8C4A0',
-    biologicalCorrelation: 'Anterior & Posterior Pituitary',
-    theme: 'Conceptualization & Mental Awareness'
+    gates: [47, 24, 4, 17, 11, 43]
   },
   {
     id: 'throat',
     name: 'Throat',
     shape: 'square',
-    x: 180,
-    y: 168,
-    width: 80,
-    height: 60,
-    gates: [62, 23, 56, 16, 20, 31, 8, 33, 45, 35, 12],
+    x: 200,
+    y: 210,
+    width: 100,
+    height: 80,
     color: '#8F4A56',
-    biologicalCorrelation: 'Thyroid & Parathyroid',
-    theme: 'Communication & Manifestation'
+    gates: [62, 23, 56, 16, 20, 31, 8, 33, 35, 12, 45]
   },
   {
     id: 'g',
     name: 'G Center',
     shape: 'diamond',
-    x: 180,
-    y: 268,
-    width: 70,
-    height: 70,
-    gates: [1, 7, 13, 10, 25, 46, 2, 15],
+    x: 200,
+    y: 310,
+    width: 90,
+    height: 90,
     color: '#FFCC00',
-    biologicalCorrelation: 'Liver & Blood',
-    theme: 'Identity, Love & Direction'
+    gates: [1, 7, 13, 10, 25, 15, 46, 2]
   },
   {
     id: 'heart',
     name: 'Heart/Ego',
-    shape: 'triangle-right',
-    x: 260,
-    y: 285,
-    width: 45,
-    height: 40,
-    gates: [21, 51, 26, 40],
+    shape: 'triangle-right',  // Points RIGHT (away from body)
+    x: 290,
+    y: 340,
+    width: 60,
+    height: 55,
     color: '#FFD57D',
-    biologicalCorrelation: 'Heart, Stomach, Thymus, Gallbladder',
-    theme: 'Willpower & Material World'
+    gates: [21, 51, 26, 40]
   },
   {
     id: 'spleen',
     name: 'Spleen',
-    shape: 'triangle-left',
-    x: 45,
-    y: 365,
-    width: 55,
-    height: 65,
-    gates: [48, 57, 44, 50, 32, 28, 18],
+    shape: 'triangle-left',  // Points LEFT (toward body center)
+    x: 70,
+    y: 420,
+    width: 70,
+    height: 90,
     color: '#6D5000',
-    biologicalCorrelation: 'Lymphatic System, Spleen',
-    theme: 'Survival, Intuition & Health'
+    gates: [48, 57, 44, 50, 32, 28, 18]
   },
   {
     id: 'solar',
     name: 'Solar Plexus',
-    shape: 'triangle-right',
-    x: 315,
-    y: 365,
-    width: 55,
-    height: 65,
-    gates: [36, 22, 37, 6, 49, 55, 30],
+    shape: 'triangle-right',  // Points RIGHT (away from body)
+    x: 330,
+    y: 420,
+    width: 70,
+    height: 90,
     color: '#6D5000',
-    biologicalCorrelation: 'Kidneys, Pancreas, Prostate/Ovaries, Nervous System',
-    theme: 'Emotions & Feelings'
+    gates: [36, 22, 37, 6, 49, 55, 30]
   },
   {
     id: 'sacral',
     name: 'Sacral',
     shape: 'square',
-    x: 180,
-    y: 390,
-    width: 80,
-    height: 55,
-    gates: [5, 14, 29, 59, 27, 34, 42, 3, 9],
+    x: 200,
+    y: 460,
+    width: 100,
+    height: 80,
     color: '#8F4A56',
-    biologicalCorrelation: 'Ovaries & Testes',
-    theme: 'Life Force, Sexuality & Work'
+    gates: [5, 14, 29, 59, 27, 34, 42, 3, 9]
   },
   {
     id: 'root',
     name: 'Root',
     shape: 'square',
-    x: 180,
-    y: 478,
-    width: 80,
-    height: 55,
-    gates: [53, 60, 52, 54, 38, 58, 19, 39, 41],
+    x: 200,
+    y: 555,
+    width: 100,
+    height: 80,
     color: '#FF5F57',
-    biologicalCorrelation: 'Adrenal Glands',
-    theme: 'Adrenaline & Pressure'
+    gates: [53, 60, 52, 19, 54, 38, 58, 39, 41]
   }
 ];
 
-// Gate positions on the bodygraph (x, y coordinates for each gate marker)
-// ViewBox: 0 0 360 520
-export const GATE_POSITIONS: Record<number, { x: number; y: number; center: string }> = {
-  // Head gates (3)
-  64: { x: 157, y: 22, center: 'head' },
-  61: { x: 180, y: 22, center: 'head' },
-  63: { x: 203, y: 22, center: 'head' },
-
-  // Ajna gates (6)
-  47: { x: 157, y: 68, center: 'ajna' },
-  24: { x: 180, y: 68, center: 'ajna' },
-  4: { x: 203, y: 68, center: 'ajna' },
-  17: { x: 157, y: 112, center: 'ajna' },
-  43: { x: 180, y: 118, center: 'ajna' },
-  11: { x: 203, y: 112, center: 'ajna' },
-
-  // Throat gates (11)
-  62: { x: 148, y: 145, center: 'throat' },
-  23: { x: 172, y: 152, center: 'throat' },
-  56: { x: 212, y: 145, center: 'throat' },
-  16: { x: 130, y: 168, center: 'throat' },
-  20: { x: 142, y: 180, center: 'throat' },
-  31: { x: 158, y: 192, center: 'throat' },
-  8: { x: 180, y: 185, center: 'throat' },
-  33: { x: 218, y: 192, center: 'throat' },
-  45: { x: 142, y: 195, center: 'throat' },
-  35: { x: 230, y: 168, center: 'throat' },
-  12: { x: 230, y: 182, center: 'throat' },
-
-  // G Center gates (8)
-  1: { x: 180, y: 240, center: 'g' },
-  7: { x: 165, y: 252, center: 'g' },
-  13: { x: 195, y: 252, center: 'g' },
-  10: { x: 152, y: 268, center: 'g' },
-  25: { x: 200, y: 258, center: 'g' },
-  46: { x: 200, y: 285, center: 'g' },
-  2: { x: 180, y: 295, center: 'g' },
-  15: { x: 160, y: 285, center: 'g' },
-
-  // Heart gates (4)
-  21: { x: 252, y: 272, center: 'heart' },
-  51: { x: 268, y: 282, center: 'heart' },
-  26: { x: 275, y: 305, center: 'heart' },
-  40: { x: 268, y: 295, center: 'heart' },
-
-  // Spleen gates (7)
-  48: { x: 58, y: 335, center: 'spleen' },
-  57: { x: 48, y: 348, center: 'spleen' },
-  44: { x: 38, y: 362, center: 'spleen' },
-  50: { x: 48, y: 375, center: 'spleen' },
-  32: { x: 42, y: 392, center: 'spleen' },
-  28: { x: 52, y: 405, center: 'spleen' },
-  18: { x: 62, y: 418, center: 'spleen' },
-
-  // Solar Plexus gates (7)
-  36: { x: 302, y: 335, center: 'solar' },
-  22: { x: 312, y: 348, center: 'solar' },
-  37: { x: 305, y: 365, center: 'solar' },
-  6: { x: 315, y: 378, center: 'solar' },
-  49: { x: 322, y: 392, center: 'solar' },
-  55: { x: 318, y: 405, center: 'solar' },
-  30: { x: 308, y: 418, center: 'solar' },
-
-  // Sacral gates (9)
-  5: { x: 152, y: 368, center: 'sacral' },
-  14: { x: 168, y: 375, center: 'sacral' },
-  29: { x: 192, y: 375, center: 'sacral' },
-  59: { x: 215, y: 385, center: 'sacral' },
-  27: { x: 145, y: 395, center: 'sacral' },
-  34: { x: 180, y: 398, center: 'sacral' },
-  42: { x: 158, y: 415, center: 'sacral' },
-  3: { x: 180, y: 418, center: 'sacral' },
-  9: { x: 202, y: 415, center: 'sacral' },
-
-  // Root gates (9)
-  53: { x: 152, y: 455, center: 'root' },
-  60: { x: 168, y: 462, center: 'root' },
-  52: { x: 192, y: 462, center: 'root' },
-  54: { x: 210, y: 455, center: 'root' },
-  38: { x: 165, y: 492, center: 'root' },
-  58: { x: 145, y: 485, center: 'root' },
-  19: { x: 218, y: 470, center: 'root' },
-  39: { x: 225, y: 485, center: 'root' },
-  41: { x: 208, y: 498, center: 'root' }
-};
-
-// Channel paths for SVG rendering
-export interface ChannelPath {
-  gates: [number, number];
-  path: string; // SVG path d attribute
+// Gate positions RELATIVE to their center
+// row/col define position within center's gate grid
+// Each center has its own layout pattern
+export interface GateLayout {
+  gate: number;
+  center: string;
+  row: number;    // Row within center (0 = top)
+  col: number;    // Column within center (0 = left, 1 = center, 2 = right)
+  edge?: 'top' | 'bottom' | 'left' | 'right' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';  // For gates on edges
 }
 
-export const CHANNEL_PATHS: ChannelPath[] = [
-  // Head-Ajna channels (vertical)
-  { gates: [64, 47], path: "M157,22 L157,68" },
-  { gates: [61, 24], path: "M180,22 L180,68" },
-  { gates: [63, 4], path: "M203,22 L203,68" },
+export const GATE_LAYOUTS: GateLayout[] = [
+  // HEAD (3 gates in 1 row at bottom edge)
+  { gate: 64, center: 'head', row: 0, col: 0, edge: 'bottom' },
+  { gate: 61, center: 'head', row: 0, col: 1, edge: 'bottom' },
+  { gate: 63, center: 'head', row: 0, col: 2, edge: 'bottom' },
 
-  // Ajna-Throat channels
-  { gates: [17, 62], path: "M157,112 L148,145" },
-  { gates: [43, 23], path: "M180,118 L172,152" },
-  { gates: [11, 56], path: "M203,112 L212,145" },
+  // AJNA (6 gates: 3 top row, 2 middle, 1 bottom)
+  { gate: 47, center: 'ajna', row: 0, col: 0, edge: 'top' },
+  { gate: 24, center: 'ajna', row: 0, col: 1, edge: 'top' },
+  { gate: 4, center: 'ajna', row: 0, col: 2, edge: 'top' },
+  { gate: 17, center: 'ajna', row: 1, col: 0 },
+  { gate: 11, center: 'ajna', row: 1, col: 2 },
+  { gate: 43, center: 'ajna', row: 2, col: 1, edge: 'bottom' },
 
-  // G-Throat channels
-  { gates: [7, 31], path: "M165,252 L158,192" },
-  { gates: [1, 8], path: "M180,240 L180,185" },
-  { gates: [13, 33], path: "M195,252 L218,192" },
+  // THROAT (11 gates in organized rows)
+  { gate: 62, center: 'throat', row: 0, col: 0, edge: 'top' },
+  { gate: 23, center: 'throat', row: 0, col: 1, edge: 'top' },
+  { gate: 56, center: 'throat', row: 0, col: 2, edge: 'top' },
+  { gate: 16, center: 'throat', row: 1, col: 0, edge: 'left' },
+  { gate: 35, center: 'throat', row: 1, col: 2, edge: 'right' },
+  { gate: 20, center: 'throat', row: 2, col: 0, edge: 'left' },
+  { gate: 12, center: 'throat', row: 2, col: 2, edge: 'right' },
+  { gate: 31, center: 'throat', row: 3, col: 0, edge: 'bottom' },
+  { gate: 8, center: 'throat', row: 3, col: 1, edge: 'bottom' },
+  { gate: 33, center: 'throat', row: 3, col: 2, edge: 'bottom' },
+  { gate: 45, center: 'throat', row: 2, col: 1 },
+
+  // G CENTER (8 gates in diamond pattern)
+  { gate: 1, center: 'g', row: 0, col: 1, edge: 'top' },
+  { gate: 7, center: 'g', row: 1, col: 0 },
+  { gate: 13, center: 'g', row: 1, col: 2 },
+  { gate: 10, center: 'g', row: 2, col: 0, edge: 'left' },
+  { gate: 25, center: 'g', row: 1, col: 1 },
+  { gate: 15, center: 'g', row: 3, col: 0 },
+  { gate: 46, center: 'g', row: 3, col: 2 },
+  { gate: 2, center: 'g', row: 4, col: 1, edge: 'bottom' },
+
+  // HEART/EGO (4 gates)
+  { gate: 21, center: 'heart', row: 0, col: 0, edge: 'top' },
+  { gate: 51, center: 'heart', row: 1, col: 0 },
+  { gate: 26, center: 'heart', row: 2, col: 0, edge: 'bottom' },
+  { gate: 40, center: 'heart', row: 1, col: 1, edge: 'right' },
+
+  // SPLEEN (7 gates along left edge, vertically arranged)
+  { gate: 48, center: 'spleen', row: 0, col: 0, edge: 'top' },
+  { gate: 57, center: 'spleen', row: 1, col: 0 },
+  { gate: 44, center: 'spleen', row: 2, col: 0 },
+  { gate: 50, center: 'spleen', row: 3, col: 0 },
+  { gate: 32, center: 'spleen', row: 4, col: 0 },
+  { gate: 28, center: 'spleen', row: 5, col: 0 },
+  { gate: 18, center: 'spleen', row: 6, col: 0, edge: 'bottom' },
+
+  // SOLAR PLEXUS (7 gates along right edge, vertically arranged)
+  { gate: 36, center: 'solar', row: 0, col: 0, edge: 'top' },
+  { gate: 22, center: 'solar', row: 1, col: 0 },
+  { gate: 37, center: 'solar', row: 2, col: 0 },
+  { gate: 6, center: 'solar', row: 3, col: 0 },
+  { gate: 49, center: 'solar', row: 4, col: 0 },
+  { gate: 55, center: 'solar', row: 5, col: 0 },
+  { gate: 30, center: 'solar', row: 6, col: 0, edge: 'bottom' },
+
+  // SACRAL (9 gates in 3x3 grid)
+  { gate: 5, center: 'sacral', row: 0, col: 0, edge: 'top' },
+  { gate: 14, center: 'sacral', row: 0, col: 1, edge: 'top' },
+  { gate: 29, center: 'sacral', row: 0, col: 2, edge: 'top' },
+  { gate: 27, center: 'sacral', row: 1, col: 0 },
+  { gate: 34, center: 'sacral', row: 1, col: 1 },
+  { gate: 59, center: 'sacral', row: 1, col: 2 },
+  { gate: 42, center: 'sacral', row: 2, col: 0, edge: 'bottom' },
+  { gate: 3, center: 'sacral', row: 2, col: 1, edge: 'bottom' },
+  { gate: 9, center: 'sacral', row: 2, col: 2, edge: 'bottom' },
+
+  // ROOT (9 gates in 3x3 grid)
+  { gate: 53, center: 'root', row: 0, col: 0, edge: 'top' },
+  { gate: 60, center: 'root', row: 0, col: 1, edge: 'top' },
+  { gate: 52, center: 'root', row: 0, col: 2, edge: 'top' },
+  { gate: 54, center: 'root', row: 1, col: 0 },
+  { gate: 19, center: 'root', row: 1, col: 2 },
+  { gate: 38, center: 'root', row: 2, col: 0, edge: 'bottom' },
+  { gate: 58, center: 'root', row: 2, col: 1, edge: 'bottom' },
+  { gate: 39, center: 'root', row: 1, col: 1 },
+  { gate: 41, center: 'root', row: 2, col: 2, edge: 'bottom' }
+];
+
+// Calculate actual gate positions based on center position and layout
+export function calculateGatePosition(
+  gate: number,
+  gateRadius: number = 8
+): { x: number; y: number; center: string } | null {
+  const layout = GATE_LAYOUTS.find(g => g.gate === gate);
+  if (!layout) return null;
+
+  const center = CENTER_CONFIG.find(c => c.id === layout.center);
+  if (!center) return null;
+
+  // Calculate position based on center type and gate layout
+  let x = center.x;
+  let y = center.y;
+
+  const halfW = center.width / 2;
+  const halfH = center.height / 2;
+
+  // Different positioning logic based on center shape
+  switch (center.shape) {
+    case 'triangle-up': {
+      // Gates at bottom edge of upward triangle
+      const gateCount = center.gates.length;
+      const spacing = center.width / (gateCount + 1);
+      x = center.x - halfW + spacing * (layout.col + 1);
+      y = center.y + halfH - gateRadius;
+      break;
+    }
+
+    case 'triangle-down': {
+      // Ajna: gates at top and bottom
+      if (layout.edge === 'top') {
+        const spacing = center.width / 4;
+        x = center.x - halfW + spacing * (layout.col + 1);
+        y = center.y - halfH + gateRadius;
+      } else if (layout.edge === 'bottom') {
+        x = center.x;
+        y = center.y + halfH - gateRadius;
+      } else {
+        // Middle gates
+        const spacing = center.width / 4;
+        x = center.x - halfW + spacing * (layout.col + 1);
+        y = center.y;
+      }
+      break;
+    }
+
+    case 'triangle-left': {
+      // Spleen: gates arranged vertically along the right edge (pointing toward center)
+      const gateCount = center.gates.length;
+      const vertSpacing = center.height / (gateCount + 1);
+      x = center.x + halfW - gateRadius - 5;  // Near right edge (the base of left-pointing triangle)
+      y = center.y - halfH + vertSpacing * (layout.row + 1);
+      break;
+    }
+
+    case 'triangle-right': {
+      // Solar/Heart: gates arranged vertically along the left edge (the base)
+      if (center.id === 'heart') {
+        // Heart has fewer gates, different layout
+        const vertSpacing = center.height / 4;
+        if (layout.edge === 'right') {
+          x = center.x + halfW - gateRadius;
+          y = center.y;
+        } else {
+          x = center.x - halfW + gateRadius + 5;
+          y = center.y - halfH + vertSpacing * (layout.row + 1);
+        }
+      } else {
+        // Solar plexus - vertical arrangement
+        const gateCount = center.gates.length;
+        const vertSpacing = center.height / (gateCount + 1);
+        x = center.x - halfW + gateRadius + 5;  // Near left edge (the base of right-pointing triangle)
+        y = center.y - halfH + vertSpacing * (layout.row + 1);
+      }
+      break;
+    }
+
+    case 'diamond': {
+      // G Center: gates in diamond pattern
+      const rows = 5;
+      const rowHeight = center.height / rows;
+
+      if (layout.edge === 'top') {
+        x = center.x;
+        y = center.y - halfH + gateRadius;
+      } else if (layout.edge === 'bottom') {
+        x = center.x;
+        y = center.y + halfH - gateRadius;
+      } else if (layout.edge === 'left') {
+        x = center.x - halfW + gateRadius;
+        y = center.y;
+      } else {
+        // Interior gates
+        const colOffset = (layout.col - 1) * 25;
+        x = center.x + colOffset;
+        y = center.y - halfH + rowHeight * (layout.row + 0.5);
+      }
+      break;
+    }
+
+    case 'square':
+    default: {
+      // Throat, Sacral, Root: grid layout
+      const cols = 3;
+      const rows = center.id === 'throat' ? 4 : 3;
+      const colSpacing = center.width / (cols + 1);
+      const rowSpacing = center.height / (rows + 1);
+
+      x = center.x - halfW + colSpacing * (layout.col + 1);
+      y = center.y - halfH + rowSpacing * (layout.row + 1);
+      break;
+    }
+  }
+
+  return { x, y, center: layout.center };
+}
+
+// Get all gate positions
+export function getAllGatePositions(gateRadius: number = 8): Record<number, { x: number; y: number; center: string }> {
+  const positions: Record<number, { x: number; y: number; center: string }> = {};
+
+  for (let gate = 1; gate <= 64; gate++) {
+    const pos = calculateGatePosition(gate, gateRadius);
+    if (pos) {
+      positions[gate] = pos;
+    }
+  }
+
+  return positions;
+}
+
+// 36 Channels
+export interface ChannelData {
+  gates: [number, number];
+  centers: [string, string];
+  name: string;
+}
+
+export const CHANNELS: ChannelData[] = [
+  // Head-Ajna
+  { gates: [64, 47], centers: ['head', 'ajna'], name: 'Abstraction' },
+  { gates: [61, 24], centers: ['head', 'ajna'], name: 'Awareness' },
+  { gates: [63, 4], centers: ['head', 'ajna'], name: 'Logic' },
+
+  // Ajna-Throat
+  { gates: [17, 62], centers: ['ajna', 'throat'], name: 'Acceptance' },
+  { gates: [43, 23], centers: ['ajna', 'throat'], name: 'Structuring' },
+  { gates: [11, 56], centers: ['ajna', 'throat'], name: 'Curiosity' },
+
+  // G-Throat
+  { gates: [7, 31], centers: ['g', 'throat'], name: 'The Alpha' },
+  { gates: [1, 8], centers: ['g', 'throat'], name: 'Inspiration' },
+  { gates: [13, 33], centers: ['g', 'throat'], name: 'The Prodigal' },
 
   // Integration channels
-  { gates: [10, 20], path: "M152,268 Q130,220 142,180" },
-  { gates: [10, 34], path: "M152,268 Q160,330 180,398" },
-  { gates: [10, 57], path: "M152,268 Q100,310 48,348" },
-  { gates: [20, 57], path: "M142,180 Q95,265 48,348" },
-  { gates: [20, 34], path: "M142,180 Q160,290 180,398" },
-  { gates: [34, 57], path: "M180,398 Q115,380 48,348" },
+  { gates: [10, 20], centers: ['g', 'throat'], name: 'Awakening' },
+  { gates: [10, 34], centers: ['g', 'sacral'], name: 'Exploration' },
+  { gates: [10, 57], centers: ['g', 'spleen'], name: 'Perfected Form' },
+  { gates: [20, 57], centers: ['throat', 'spleen'], name: 'The Brainwave' },
+  { gates: [20, 34], centers: ['throat', 'sacral'], name: 'Charisma' },
+  { gates: [34, 57], centers: ['sacral', 'spleen'], name: 'Power' },
 
-  // G-Heart channel
-  { gates: [25, 51], path: "M200,258 Q235,270 268,282" },
+  // G-Heart
+  { gates: [25, 51], centers: ['g', 'heart'], name: 'Initiation' },
 
-  // Heart-Throat channel
-  { gates: [21, 45], path: "M252,272 Q200,235 142,195" },
+  // Heart-Throat
+  { gates: [21, 45], centers: ['heart', 'throat'], name: 'Money' },
 
-  // Heart-Spleen channel
-  { gates: [26, 44], path: "M275,305 Q150,340 38,362" },
+  // Heart-Spleen
+  { gates: [26, 44], centers: ['heart', 'spleen'], name: 'Surrender' },
 
-  // Heart-Solar Plexus channel
-  { gates: [40, 37], path: "M268,295 Q290,330 305,365" },
+  // Heart-Solar Plexus
+  { gates: [40, 37], centers: ['heart', 'solar'], name: 'Community' },
 
-  // G-Sacral channels
-  { gates: [46, 29], path: "M200,285 L192,375" },
-  { gates: [2, 14], path: "M180,295 L168,375" },
-  { gates: [15, 5], path: "M160,285 L152,368" },
+  // G-Sacral
+  { gates: [46, 29], centers: ['g', 'sacral'], name: 'Discovery' },
+  { gates: [2, 14], centers: ['g', 'sacral'], name: 'The Beat' },
+  { gates: [15, 5], centers: ['g', 'sacral'], name: 'Rhythm' },
 
-  // Throat-Spleen channels
-  { gates: [16, 48], path: "M130,168 Q90,250 58,335" },
+  // Throat-Spleen
+  { gates: [16, 48], centers: ['throat', 'spleen'], name: 'The Wavelength' },
 
-  // Throat-Solar Plexus channels
-  { gates: [12, 22], path: "M230,182 Q270,265 312,348" },
-  { gates: [35, 36], path: "M230,168 Q270,250 302,335" },
+  // Throat-Solar Plexus
+  { gates: [12, 22], centers: ['throat', 'solar'], name: 'Openness' },
+  { gates: [35, 36], centers: ['throat', 'solar'], name: 'Transitoriness' },
 
-  // Spleen-Sacral channels
-  { gates: [50, 27], path: "M48,375 Q95,385 145,395" },
+  // Spleen-Sacral
+  { gates: [50, 27], centers: ['spleen', 'sacral'], name: 'Preservation' },
 
-  // Spleen-Root channels
-  { gates: [18, 58], path: "M62,418 Q100,455 145,485" },
-  { gates: [28, 38], path: "M52,405 Q100,450 165,492" },
-  { gates: [32, 54], path: "M42,392 Q125,420 210,455" },
+  // Spleen-Root
+  { gates: [18, 58], centers: ['spleen', 'root'], name: 'Judgment' },
+  { gates: [28, 38], centers: ['spleen', 'root'], name: 'Struggle' },
+  { gates: [32, 54], centers: ['spleen', 'root'], name: 'Transformation' },
 
-  // Solar Plexus-Sacral channel
-  { gates: [6, 59], path: "M315,378 Q265,380 215,385" },
+  // Solar Plexus-Sacral
+  { gates: [6, 59], centers: ['solar', 'sacral'], name: 'Intimacy' },
 
-  // Solar Plexus-Root channels
-  { gates: [30, 41], path: "M308,418 Q260,460 208,498" },
-  { gates: [49, 19], path: "M322,392 Q270,430 218,470" },
-  { gates: [55, 39], path: "M318,405 Q270,445 225,485" },
+  // Solar Plexus-Root
+  { gates: [30, 41], centers: ['solar', 'root'], name: 'Recognition' },
+  { gates: [49, 19], centers: ['solar', 'root'], name: 'Synthesis' },
+  { gates: [55, 39], centers: ['solar', 'root'], name: 'Emoting' },
 
-  // Sacral-Root channels
-  { gates: [3, 60], path: "M180,418 L168,462" },
-  { gates: [9, 52], path: "M202,415 L192,462" },
-  { gates: [42, 53], path: "M158,415 L152,455" }
+  // Sacral-Root
+  { gates: [3, 60], centers: ['sacral', 'root'], name: 'Mutation' },
+  { gates: [9, 52], centers: ['sacral', 'root'], name: 'Concentration' },
+  { gates: [42, 53], centers: ['sacral', 'root'], name: 'Maturation' }
 ];
 
 // Planet glyphs for displaying planetary activations
@@ -530,42 +572,6 @@ export const PLANET_GLYPHS: Record<string, string> = {
   Pluto: '\u2647'
 };
 
-// Harmonic gates (opposite gates on the Rave Mandala)
-export const HARMONIC_GATES: Record<number, number> = {
-  1: 2, 2: 1,
-  3: 50, 50: 3,
-  4: 49, 49: 4,
-  5: 35, 35: 5,
-  6: 36, 36: 6,
-  7: 13, 13: 7,
-  8: 14, 14: 8,
-  9: 16, 16: 9,
-  10: 15, 15: 10,
-  11: 12, 12: 11,
-  17: 18, 18: 17,
-  19: 33, 33: 19,
-  20: 34, 34: 20,
-  21: 48, 48: 21,
-  22: 47, 47: 22,
-  23: 43, 43: 23,
-  24: 44, 44: 24,
-  25: 46, 46: 25,
-  26: 45, 45: 26,
-  27: 28, 28: 27,
-  29: 30, 30: 29,
-  31: 41, 41: 31,
-  32: 42, 42: 32,
-  37: 40, 40: 37,
-  38: 39, 39: 38,
-  51: 57, 57: 51,
-  52: 58, 58: 52,
-  53: 54, 54: 53,
-  55: 59, 59: 55,
-  56: 60, 60: 56,
-  61: 62, 62: 61,
-  63: 64, 64: 63
-};
-
 // Gate connections (which gates form channels)
 export const GATE_CONNECTIONS: Record<number, number[]> = {
   1: [8],
@@ -577,7 +583,7 @@ export const GATE_CONNECTIONS: Record<number, number[]> = {
   7: [31],
   8: [1],
   9: [52],
-  10: [20, 34, 57],  // Integration gate
+  10: [20, 34, 57],
   11: [56],
   12: [22],
   13: [33],
@@ -587,7 +593,7 @@ export const GATE_CONNECTIONS: Record<number, number[]> = {
   17: [62],
   18: [58],
   19: [49],
-  20: [10, 34, 57],  // Integration gate
+  20: [10, 34, 57],
   21: [45],
   22: [12],
   23: [43],
@@ -601,7 +607,7 @@ export const GATE_CONNECTIONS: Record<number, number[]> = {
   31: [7],
   32: [54],
   33: [13],
-  34: [10, 20, 57],  // Integration gate
+  34: [10, 20, 57],
   35: [36],
   36: [35],
   37: [40],
@@ -624,7 +630,7 @@ export const GATE_CONNECTIONS: Record<number, number[]> = {
   54: [32],
   55: [39],
   56: [11],
-  57: [10, 20, 34],  // Integration gate
+  57: [10, 20, 34],
   58: [18],
   59: [6],
   60: [3],
