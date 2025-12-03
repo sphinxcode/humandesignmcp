@@ -47,54 +47,44 @@ function calculatePlanetPosition(julianDay, planet) {
 
 /**
  * Find Design date (when Sun was 88 degrees before current position)
- * Based on hdkit algorithm
+ * Uses binary search algorithm from hdkit Ruby implementation
  */
 async function findDesignDate(personalitySunLongitude, birthJulianDay) {
-  // Start search ~92 days before birth
-  let searchJD = birthJulianDay - 92;
-  let found = false;
-  let offset;
+  // Binary search between 96 and 84 days before birth
+  let startJD = birthJulianDay - 96;
+  let endJD = birthJulianDay - 84;
+  let maxIterations = 100;
+  let designJD = null;
 
-  const targetOffset = 88; // degrees
-  const tolerance = 0.01; // degrees
+  while (designJD === null && maxIterations > 0) {
+    const midJD = (startJD + endJD) / 2;
+    const midSunLong = await calculatePlanetPosition(midJD, PLANETS.SUN);
 
-  // Determine search direction based on personality sun position
-  if (personalitySunLongitude >= targetOffset) {
-    // Normal case: Design sun should be ~88 degrees less
-    while (!found) {
-      const searchSunLong = await calculatePlanetPosition(searchJD, PLANETS.SUN);
-      offset = personalitySunLongitude - searchSunLong;
-
-      // Handle wrap-around
-      if (offset < 0) offset += 360;
-
-      if (Math.abs(offset - targetOffset) < tolerance) {
-        found = true;
-      } else if (offset < targetOffset) {
-        searchJD += 0.01; // Move forward ~14 minutes
-      } else {
-        searchJD -= 0.01; // Move backward ~14 minutes
-      }
+    // Calculate difference, handling wrap-around
+    let difference = Math.abs(personalitySunLongitude - midSunLong);
+    if (difference > 180) {
+      difference = 360 - difference;
     }
-  } else {
-    // Edge case: Personality sun < 88°, so Design sun will be > 272°
-    while (!found) {
-      const searchSunLong = await calculatePlanetPosition(searchJD, PLANETS.SUN);
-      offset = (personalitySunLongitude + 360) - searchSunLong;
 
-      if (offset > 360) offset -= 360;
-
-      if (Math.abs(offset - targetOffset) < tolerance) {
-        found = true;
-      } else if (offset < targetOffset) {
-        searchJD += 0.01;
-      } else {
-        searchJD -= 0.01;
-      }
+    // Check if we found it (within tolerance)
+    if (difference < 88.00001 && difference > 87.99999) {
+      designJD = midJD;
+    } else if (difference > 88) {
+      // Sun needs to be further along, search later dates
+      startJD = midJD;
+    } else {
+      // Sun is too far along, search earlier dates
+      endJD = midJD;
     }
+
+    maxIterations--;
   }
 
-  return searchJD;
+  if (designJD === null) {
+    throw new Error('Could not find Design date within 100 iterations');
+  }
+
+  return designJD;
 }
 
 /**
