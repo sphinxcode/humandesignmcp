@@ -280,9 +280,9 @@ async function calculateHumanDesign(params) {
         utcData.utcDay,
         utcData.utcHour + (utcData.utcMinute / 60),
         swisseph.SE_GREG_CAL,
-        (jd) => {
-          if (jd.error) reject(new Error(jd.error));
-          else resolve(jd.julianDay);
+        (julday_ut) => {
+          // The callback receives the Julian Day directly, not as an object
+          resolve(julday_ut);
         }
       );
     });
