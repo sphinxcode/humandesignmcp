@@ -47,44 +47,49 @@ function calculatePlanetPosition(julianDay, planet) {
 
 /**
  * Find Design date (when Sun was 88 degrees before current position)
- * Uses binary search algorithm from hdkit Ruby implementation
+ * Uses forward linear search from hdkit TypeScript implementation
  */
 async function findDesignDate(personalitySunLongitude, birthJulianDay) {
-  // Binary search between 96 and 84 days before birth
-  let startJD = birthJulianDay - 96;
-  let endJD = birthJulianDay - 84;
-  let maxIterations = 100;
-  let designJD = null;
+  // Start 92 days before birth (7.949e+9 milliseconds = ~92 days)
+  // 1 day in Julian Day = 1.0, so 92 days = 92.0
+  let searchJD = birthJulianDay - 92;
+  let offset;
 
-  while (designJD === null && maxIterations > 0) {
-    const midJD = (startJD + endJD) / 2;
-    const midSunLong = await calculatePlanetPosition(midJD, PLANETS.SUN);
+  if (personalitySunLongitude > 87) {
+    // Normal case: Personality sun >= 88°
+    offset = 89;
+    let maxIterations = 100000; // Safety limit
 
-    // Calculate difference, handling wrap-around
-    let difference = Math.abs(personalitySunLongitude - midSunLong);
-    if (difference > 180) {
-      difference = 360 - difference;
+    while (offset > 88 && maxIterations > 0) {
+      const searchSunLong = await calculatePlanetPosition(searchJD, PLANETS.SUN);
+      offset = Math.abs(personalitySunLongitude - searchSunLong);
+
+      if (offset > 88) {
+        // Move forward by ~10 seconds (10000 ms = 0.0001157 days)
+        searchJD += 0.0001157;
+      }
+
+      maxIterations--;
     }
+  } else {
+    // Edge case: Personality sun < 88° (wraps around)
+    offset = 271;
+    let maxIterations = 100000; // Safety limit
 
-    // Check if we found it (within tolerance)
-    if (difference < 88.00001 && difference > 87.99999) {
-      designJD = midJD;
-    } else if (difference > 88) {
-      // Sun needs to be further along, search later dates
-      startJD = midJD;
-    } else {
-      // Sun is too far along, search earlier dates
-      endJD = midJD;
+    while (offset < 272 && maxIterations > 0) {
+      const searchSunLong = await calculatePlanetPosition(searchJD, PLANETS.SUN);
+      offset = Math.abs(personalitySunLongitude - searchSunLong);
+
+      if (offset < 272) {
+        // Move forward by ~10 seconds
+        searchJD += 0.0001157;
+      }
+
+      maxIterations--;
     }
-
-    maxIterations--;
   }
 
-  if (designJD === null) {
-    throw new Error('Could not find Design date within 100 iterations');
-  }
-
-  return designJD;
+  return searchJD;
 }
 
 /**
