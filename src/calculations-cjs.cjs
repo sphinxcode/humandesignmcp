@@ -104,6 +104,64 @@ function safeGetGate(longitude, planetName) {
 }
 
 /**
+ * PHS and Rave Psychology mappings based on Color
+ */
+const PHS_MAPPINGS = {
+  digestion: {
+    1: 'Appetite',
+    2: 'Taste',
+    3: 'Thirst',
+    4: 'Touch',
+    5: 'Sound',
+    6: 'Light'
+  },
+  digestionType: {
+    left: { 1: 'Consecutive', 2: 'Open', 3: 'Hot', 4: 'Calm', 5: 'High', 6: 'Direct' },
+    right: { 1: 'Alternating', 2: 'Closed', 3: 'Cold', 4: 'Nervous', 5: 'Low', 6: 'Indirect' }
+  },
+  environment: {
+    1: 'Caves',
+    2: 'Markets',
+    3: 'Kitchens',
+    4: 'Mountains',
+    5: 'Valleys',
+    6: 'Shores'
+  },
+  environmentType: {
+    left: { 1: 'Selective', 2: 'Internal', 3: 'Wet', 4: 'Active', 5: 'Narrow', 6: 'Natural' },
+    right: { 1: 'Blending', 2: 'External', 3: 'Dry', 4: 'Passive', 5: 'Wide', 6: 'Artificial' }
+  },
+  motivation: {
+    1: 'Fear',
+    2: 'Hope',
+    3: 'Desire',
+    4: 'Need',
+    5: 'Guilt',
+    6: 'Innocence'
+  },
+  perspective: {
+    1: 'Survival',
+    2: 'Possibility',
+    3: 'Power',
+    4: 'Wanting',
+    5: 'Probability',
+    6: 'Personal'
+  }
+};
+
+/**
+ * Environmental Tone mappings based on Tone
+ */
+const ENVIRONMENTAL_TONES = {
+  1: 'Smell',
+  2: 'Taste',
+  3: 'Outer Vision',
+  4: 'Inner Vision',
+  5: 'Feeling',
+  6: 'Touch'
+};
+
+/**
  * Calculate all planetary activations for Personality or Design
  */
 async function calculateAllPlanets(julianDay) {
@@ -117,6 +175,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: sunLong,
       gate: sunActivation.gate,
       line: sunActivation.line,
+      color: sunActivation.color,
+      tone: sunActivation.tone,
+      base: sunActivation.base,
       sign: sunActivation.sign
     };
 
@@ -128,6 +189,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: earthLong,
       gate: earthActivation.gate,
       line: earthActivation.line,
+      color: earthActivation.color,
+      tone: earthActivation.tone,
+      base: earthActivation.base,
       sign: earthActivation.sign
     };
 
@@ -138,6 +202,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: rahuLong,
       gate: rahuActivation.gate,
       line: rahuActivation.line,
+      color: rahuActivation.color,
+      tone: rahuActivation.tone,
+      base: rahuActivation.base,
       sign: rahuActivation.sign
     };
 
@@ -149,6 +216,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: ketuLong,
       gate: ketuActivation.gate,
       line: ketuActivation.line,
+      color: ketuActivation.color,
+      tone: ketuActivation.tone,
+      base: ketuActivation.base,
       sign: ketuActivation.sign
     };
 
@@ -159,6 +229,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: moonLong,
       gate: moonActivation.gate,
       line: moonActivation.line,
+      color: moonActivation.color,
+      tone: moonActivation.tone,
+      base: moonActivation.base,
       sign: moonActivation.sign
     };
 
@@ -169,6 +242,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: mercuryLong,
       gate: mercuryActivation.gate,
       line: mercuryActivation.line,
+      color: mercuryActivation.color,
+      tone: mercuryActivation.tone,
+      base: mercuryActivation.base,
       sign: mercuryActivation.sign
     };
 
@@ -179,6 +255,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: venusLong,
       gate: venusActivation.gate,
       line: venusActivation.line,
+      color: venusActivation.color,
+      tone: venusActivation.tone,
+      base: venusActivation.base,
       sign: venusActivation.sign
     };
 
@@ -189,6 +268,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: marsLong,
       gate: marsActivation.gate,
       line: marsActivation.line,
+      color: marsActivation.color,
+      tone: marsActivation.tone,
+      base: marsActivation.base,
       sign: marsActivation.sign
     };
 
@@ -199,6 +281,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: jupiterLong,
       gate: jupiterActivation.gate,
       line: jupiterActivation.line,
+      color: jupiterActivation.color,
+      tone: jupiterActivation.tone,
+      base: jupiterActivation.base,
       sign: jupiterActivation.sign
     };
 
@@ -209,6 +294,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: saturnLong,
       gate: saturnActivation.gate,
       line: saturnActivation.line,
+      color: saturnActivation.color,
+      tone: saturnActivation.tone,
+      base: saturnActivation.base,
       sign: saturnActivation.sign
     };
 
@@ -219,6 +307,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: uranusLong,
       gate: uranusActivation.gate,
       line: uranusActivation.line,
+      color: uranusActivation.color,
+      tone: uranusActivation.tone,
+      base: uranusActivation.base,
       sign: uranusActivation.sign
     };
 
@@ -229,6 +320,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: neptuneLong,
       gate: neptuneActivation.gate,
       line: neptuneActivation.line,
+      color: neptuneActivation.color,
+      tone: neptuneActivation.tone,
+      base: neptuneActivation.base,
       sign: neptuneActivation.sign
     };
 
@@ -239,6 +333,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: plutoLong,
       gate: plutoActivation.gate,
       line: plutoActivation.line,
+      color: plutoActivation.color,
+      tone: plutoActivation.tone,
+      base: plutoActivation.base,
       sign: plutoActivation.sign
     };
 
@@ -446,6 +543,33 @@ async function calculateHumanDesign(params) {
       authority = 'Self-Projected';
     }
 
+    // Calculate Variable Type (16 types: PLR DLR, PLL DLL, etc.)
+    // Based on tones of Personality Sun, Personality Rahu, Design Sun, Design Ketu
+    const variableType = `P${personality.Sun.tone < 4 ? 'L' : 'R'}${personality.Rahu.tone < 4 ? 'L' : 'R'} D${design.Sun.tone < 4 ? 'L' : 'R'}${design.Ketu.tone < 4 ? 'L' : 'R'}`;
+
+    // Calculate PHS (Primary Health System)
+    // Digestion is based on Design Sun Color
+    const designSunColorSide = design.Sun.tone < 4 ? 'left' : 'right';
+    const digestionBase = PHS_MAPPINGS.digestion[design.Sun.color];
+    const digestionType = PHS_MAPPINGS.digestionType[designSunColorSide][design.Sun.color];
+    const digestion = `${digestionType} ${digestionBase}`;
+
+    // Environment is based on Design Ketu (South Node) Color
+    const designKetuColorSide = design.Ketu.tone < 4 ? 'left' : 'right';
+    const environmentBase = PHS_MAPPINGS.environment[design.Ketu.color];
+    const environmentType = PHS_MAPPINGS.environmentType[designKetuColorSide][design.Ketu.color];
+    const environment = `${environmentType} ${environmentBase}`;
+
+    // Environmental Tone is based on Design Ketu (South Node) Tone
+    const environmentalTone = ENVIRONMENTAL_TONES[design.Ketu.tone];
+
+    // Calculate Rave Psychology
+    // Motivation is based on Personality Sun Color
+    const motivation = PHS_MAPPINGS.motivation[personality.Sun.color];
+
+    // Perspective is based on Personality Rahu (North Node) Color
+    const perspective = PHS_MAPPINGS.perspective[personality.Rahu.color];
+
     return {
       birthInfo: {
         date: birthDate,
@@ -457,11 +581,21 @@ async function calculateHumanDesign(params) {
       type,
       authority,
       profile,
+      variableType,
+      phs: {
+        digestion,
+        environment,
+        environmentalTone
+      },
+      ravePsychology: {
+        motivation,
+        perspective
+      },
       personality,
       design,
       channels: channels.sort(),
       definedCenters: Array.from(definedCenters).sort(),
-      version: '2.0.0-complete'
+      version: '3.0.0-extended'
     };
 
   } catch (error) {
