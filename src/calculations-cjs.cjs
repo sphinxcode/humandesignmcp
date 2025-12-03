@@ -543,6 +543,70 @@ async function calculateHumanDesign(params) {
       authority = 'Self-Projected';
     }
 
+    // Calculate Definition (how centers are connected)
+    function calculateDefinition(definedCenters, channels) {
+      if (definedCenters.size === 0) {
+        return 'None';
+      }
+
+      // Build adjacency map of connected centers
+      const centerConnections = new Map();
+      definedCenters.forEach(center => {
+        centerConnections.set(center, new Set());
+      });
+
+      // Add connections based on channels
+      channels.forEach(channel => {
+        const channelCenters = CENTERS_BY_CHANNEL[channel];
+        if (channelCenters && channelCenters.length === 2) {
+          const [center1, center2] = channelCenters;
+          if (centerConnections.has(center1) && centerConnections.has(center2)) {
+            centerConnections.get(center1).add(center2);
+            centerConnections.get(center2).add(center1);
+          }
+        }
+      });
+
+      // Find connected components using DFS
+      const visited = new Set();
+      let componentCount = 0;
+
+      function dfs(center) {
+        visited.add(center);
+        const neighbors = centerConnections.get(center);
+        if (neighbors) {
+          neighbors.forEach(neighbor => {
+            if (!visited.has(neighbor)) {
+              dfs(neighbor);
+            }
+          });
+        }
+      }
+
+      // Count separate groups
+      definedCenters.forEach(center => {
+        if (!visited.has(center)) {
+          componentCount++;
+          dfs(center);
+        }
+      });
+
+      // Return definition based on component count
+      if (componentCount === 1) {
+        return 'Single';
+      } else if (componentCount === 2) {
+        return 'Split';
+      } else if (componentCount === 3) {
+        return 'Triple Split';
+      } else if (componentCount === 4) {
+        return 'Quadruple Split';
+      } else {
+        return 'None';
+      }
+    }
+
+    const definition = calculateDefinition(definedCenters, channels);
+
     // Calculate Variable Type (16 types: PLR DLR, PLL DLL, etc.)
     // Based on tones of Personality Sun, Personality Rahu, Design Sun, Design Ketu
     const variableType = `P${personality.Sun.tone < 4 ? 'L' : 'R'}${personality.Rahu.tone < 4 ? 'L' : 'R'} D${design.Sun.tone < 4 ? 'L' : 'R'}${design.Ketu.tone < 4 ? 'L' : 'R'}`;
@@ -589,6 +653,7 @@ async function calculateHumanDesign(params) {
       },
       type,
       authority,
+      definition,
       profile,
       variableType,
       phs: {
