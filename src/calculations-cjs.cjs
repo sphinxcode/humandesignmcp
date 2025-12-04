@@ -177,6 +177,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: sunLong,
       gate: sunActivation.gate,
       line: sunActivation.line,
+      color: sunActivation.color,
+      tone: sunActivation.tone,
+      base: sunActivation.base,
       sign: sunActivation.sign
     }, 'Sun');
 
@@ -188,6 +191,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: earthLong,
       gate: earthActivation.gate,
       line: earthActivation.line,
+      color: earthActivation.color,
+      tone: earthActivation.tone,
+      base: earthActivation.base,
       sign: earthActivation.sign
     }, 'Earth');
 
@@ -198,6 +204,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: rahuLong,
       gate: rahuActivation.gate,
       line: rahuActivation.line,
+      color: rahuActivation.color,
+      tone: rahuActivation.tone,
+      base: rahuActivation.base,
       sign: rahuActivation.sign
     }, 'Rahu');
 
@@ -209,6 +218,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: ketuLong,
       gate: ketuActivation.gate,
       line: ketuActivation.line,
+      color: ketuActivation.color,
+      tone: ketuActivation.tone,
+      base: ketuActivation.base,
       sign: ketuActivation.sign
     }, 'Ketu');
 
@@ -219,6 +231,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: moonLong,
       gate: moonActivation.gate,
       line: moonActivation.line,
+      color: moonActivation.color,
+      tone: moonActivation.tone,
+      base: moonActivation.base,
       sign: moonActivation.sign
     }, 'Moon');
 
@@ -229,6 +244,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: mercuryLong,
       gate: mercuryActivation.gate,
       line: mercuryActivation.line,
+      color: mercuryActivation.color,
+      tone: mercuryActivation.tone,
+      base: mercuryActivation.base,
       sign: mercuryActivation.sign
     }, 'Mercury');
 
@@ -239,6 +257,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: venusLong,
       gate: venusActivation.gate,
       line: venusActivation.line,
+      color: venusActivation.color,
+      tone: venusActivation.tone,
+      base: venusActivation.base,
       sign: venusActivation.sign
     }, 'Venus');
 
@@ -249,6 +270,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: marsLong,
       gate: marsActivation.gate,
       line: marsActivation.line,
+      color: marsActivation.color,
+      tone: marsActivation.tone,
+      base: marsActivation.base,
       sign: marsActivation.sign
     }, 'Mars');
 
@@ -259,6 +283,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: jupiterLong,
       gate: jupiterActivation.gate,
       line: jupiterActivation.line,
+      color: jupiterActivation.color,
+      tone: jupiterActivation.tone,
+      base: jupiterActivation.base,
       sign: jupiterActivation.sign
     }, 'Jupiter');
 
@@ -269,6 +296,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: saturnLong,
       gate: saturnActivation.gate,
       line: saturnActivation.line,
+      color: saturnActivation.color,
+      tone: saturnActivation.tone,
+      base: saturnActivation.base,
       sign: saturnActivation.sign
     }, 'Saturn');
 
@@ -279,6 +309,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: uranusLong,
       gate: uranusActivation.gate,
       line: uranusActivation.line,
+      color: uranusActivation.color,
+      tone: uranusActivation.tone,
+      base: uranusActivation.base,
       sign: uranusActivation.sign
     }, 'Uranus');
 
@@ -289,6 +322,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: neptuneLong,
       gate: neptuneActivation.gate,
       line: neptuneActivation.line,
+      color: neptuneActivation.color,
+      tone: neptuneActivation.tone,
+      base: neptuneActivation.base,
       sign: neptuneActivation.sign
     }, 'Neptune');
 
@@ -299,6 +335,9 @@ async function calculateAllPlanets(julianDay) {
       longitude: plutoLong,
       gate: plutoActivation.gate,
       line: plutoActivation.line,
+      color: plutoActivation.color,
+      tone: plutoActivation.tone,
+      base: plutoActivation.base,
       sign: plutoActivation.sign
     }, 'Pluto');
 
@@ -652,7 +691,7 @@ async function calculateHumanDesign(params) {
       design,
       channels: channels.sort(),
       definedCenters: Array.from(definedCenters).sort(),
-      version: '3.3.1-complete-with-tones'
+      version: '3.4.0-correct-phs-and-variables'
     };
 
   } catch (error) {
