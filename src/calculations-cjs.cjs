@@ -238,7 +238,7 @@ async function calculateAllPlanets(julianDay, houseCusps = null) {
       tone: rahuActivation.tone,
       base: rahuActivation.base,
       sign: rahuActivation.sign
-    }, 'Rahu');
+    }, houseCusps), 'Rahu');
 
     // Calculate South Node (Ketu - 180° from Rahu)
     let ketuLong = rahuLong + 180;
@@ -252,7 +252,7 @@ async function calculateAllPlanets(julianDay, houseCusps = null) {
       tone: ketuActivation.tone,
       base: ketuActivation.base,
       sign: ketuActivation.sign
-    }, 'Ketu');
+    }, houseCusps), 'Ketu');
 
     // Calculate Moon
     const moonLong = await calculatePlanetPosition(julianDay, PLANETS.MOON);
@@ -265,7 +265,7 @@ async function calculateAllPlanets(julianDay, houseCusps = null) {
       tone: moonActivation.tone,
       base: moonActivation.base,
       sign: moonActivation.sign
-    }, 'Moon');
+    }, houseCusps), 'Moon');
 
     // Calculate Mercury
     const mercuryLong = await calculatePlanetPosition(julianDay, PLANETS.MERCURY);
@@ -278,7 +278,7 @@ async function calculateAllPlanets(julianDay, houseCusps = null) {
       tone: mercuryActivation.tone,
       base: mercuryActivation.base,
       sign: mercuryActivation.sign
-    }, 'Mercury');
+    }, houseCusps), 'Mercury');
 
     // Calculate Venus (Note: Mars comes before Venus in HD)
     const venusLong = await calculatePlanetPosition(julianDay, PLANETS.VENUS);
@@ -291,7 +291,7 @@ async function calculateAllPlanets(julianDay, houseCusps = null) {
       tone: venusActivation.tone,
       base: venusActivation.base,
       sign: venusActivation.sign
-    }, 'Venus');
+    }, houseCusps), 'Venus');
 
     // Calculate Mars
     const marsLong = await calculatePlanetPosition(julianDay, PLANETS.MARS);
@@ -304,7 +304,7 @@ async function calculateAllPlanets(julianDay, houseCusps = null) {
       tone: marsActivation.tone,
       base: marsActivation.base,
       sign: marsActivation.sign
-    }, 'Mars');
+    }, houseCusps), 'Mars');
 
     // Calculate Jupiter
     const jupiterLong = await calculatePlanetPosition(julianDay, PLANETS.JUPITER);
@@ -317,7 +317,7 @@ async function calculateAllPlanets(julianDay, houseCusps = null) {
       tone: jupiterActivation.tone,
       base: jupiterActivation.base,
       sign: jupiterActivation.sign
-    }, 'Jupiter');
+    }, houseCusps), 'Jupiter');
 
     // Calculate Saturn
     const saturnLong = await calculatePlanetPosition(julianDay, PLANETS.SATURN);
@@ -330,7 +330,7 @@ async function calculateAllPlanets(julianDay, houseCusps = null) {
       tone: saturnActivation.tone,
       base: saturnActivation.base,
       sign: saturnActivation.sign
-    }, 'Saturn');
+    }, houseCusps), 'Saturn');
 
     // Calculate Uranus
     const uranusLong = await calculatePlanetPosition(julianDay, PLANETS.URANUS);
@@ -343,7 +343,7 @@ async function calculateAllPlanets(julianDay, houseCusps = null) {
       tone: uranusActivation.tone,
       base: uranusActivation.base,
       sign: uranusActivation.sign
-    }, 'Uranus');
+    }, houseCusps), 'Uranus');
 
     // Calculate Neptune
     const neptuneLong = await calculatePlanetPosition(julianDay, PLANETS.NEPTUNE);
@@ -356,7 +356,7 @@ async function calculateAllPlanets(julianDay, houseCusps = null) {
       tone: neptuneActivation.tone,
       base: neptuneActivation.base,
       sign: neptuneActivation.sign
-    }, 'Neptune');
+    }, houseCusps), 'Neptune');
 
     // Calculate Pluto
     const plutoLong = await calculatePlanetPosition(julianDay, PLANETS.PLUTO);
@@ -369,7 +369,7 @@ async function calculateAllPlanets(julianDay, houseCusps = null) {
       tone: plutoActivation.tone,
       base: plutoActivation.base,
       sign: plutoActivation.sign
-    }, 'Pluto');
+    }, houseCusps), 'Pluto');
 
     return activations;
   } catch (error) {
