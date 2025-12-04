@@ -180,16 +180,30 @@ function safeGetGate(longitude, planetName) {
 }
 
 /**
- * Calculate all planetary activations for Personality or Design
+ * Helper to add house information to activation data
  */
-async function calculateAllPlanets(julianDay) {
+function addHouseInfo(activationData, houseCusps) {
+  if (houseCusps && activationData.longitude !== undefined) {
+    const houseNum = getHouseNumber(activationData.longitude, houseCusps);
+    activationData.house = houseNum;
+    activationData.houseDescription = HOUSE_DESCRIPTIONS[houseNum];
+  }
+  return activationData;
+}
+
+/**
+ * Calculate all planetary activations for Personality or Design
+ * @param {number} julianDay - Julian day for calculations
+ * @param {Array} houseCusps - Optional house cusps for adding house information
+ */
+async function calculateAllPlanets(julianDay, houseCusps = null) {
   const activations = {};
 
   try {
     // Calculate Sun
     const sunLong = await calculatePlanetPosition(julianDay, PLANETS.SUN);
     const sunActivation = safeGetGate(sunLong, 'Sun');
-    activations.Sun = enrichActivation({
+    activations.Sun = enrichActivation(addHouseInfo({
       longitude: sunLong,
       gate: sunActivation.gate,
       line: sunActivation.line,
@@ -197,13 +211,13 @@ async function calculateAllPlanets(julianDay) {
       tone: sunActivation.tone,
       base: sunActivation.base,
       sign: sunActivation.sign
-    }, 'Sun');
+    }, houseCusps), 'Sun');
 
     // Calculate Earth (180° from Sun)
     let earthLong = sunLong + 180;
     if (earthLong >= 360) earthLong -= 360;
     const earthActivation = safeGetGate(earthLong, 'Earth');
-    activations.Earth = enrichActivation({
+    activations.Earth = enrichActivation(addHouseInfo({
       longitude: earthLong,
       gate: earthActivation.gate,
       line: earthActivation.line,
@@ -211,12 +225,12 @@ async function calculateAllPlanets(julianDay) {
       tone: earthActivation.tone,
       base: earthActivation.base,
       sign: earthActivation.sign
-    }, 'Earth');
+    }, houseCusps), 'Earth');
 
     // Calculate North Node (Rahu)
     const rahuLong = await calculatePlanetPosition(julianDay, PLANETS.TRUE_NODE);
     const rahuActivation = safeGetGate(rahuLong, 'Rahu');
-    activations.Rahu = enrichActivation({
+    activations.Rahu = enrichActivation(addHouseInfo({
       longitude: rahuLong,
       gate: rahuActivation.gate,
       line: rahuActivation.line,
@@ -230,7 +244,7 @@ async function calculateAllPlanets(julianDay) {
     let ketuLong = rahuLong + 180;
     if (ketuLong >= 360) ketuLong -= 360;
     const ketuActivation = safeGetGate(ketuLong, 'Ketu');
-    activations.Ketu = enrichActivation({
+    activations.Ketu = enrichActivation(addHouseInfo({
       longitude: ketuLong,
       gate: ketuActivation.gate,
       line: ketuActivation.line,
@@ -243,7 +257,7 @@ async function calculateAllPlanets(julianDay) {
     // Calculate Moon
     const moonLong = await calculatePlanetPosition(julianDay, PLANETS.MOON);
     const moonActivation = safeGetGate(moonLong, 'Moon');
-    activations.Moon = enrichActivation({
+    activations.Moon = enrichActivation(addHouseInfo({
       longitude: moonLong,
       gate: moonActivation.gate,
       line: moonActivation.line,
@@ -256,7 +270,7 @@ async function calculateAllPlanets(julianDay) {
     // Calculate Mercury
     const mercuryLong = await calculatePlanetPosition(julianDay, PLANETS.MERCURY);
     const mercuryActivation = safeGetGate(mercuryLong, 'Mercury');
-    activations.Mercury = enrichActivation({
+    activations.Mercury = enrichActivation(addHouseInfo({
       longitude: mercuryLong,
       gate: mercuryActivation.gate,
       line: mercuryActivation.line,
@@ -269,7 +283,7 @@ async function calculateAllPlanets(julianDay) {
     // Calculate Venus (Note: Mars comes before Venus in HD)
     const venusLong = await calculatePlanetPosition(julianDay, PLANETS.VENUS);
     const venusActivation = safeGetGate(venusLong, 'Venus');
-    activations.Venus = enrichActivation({
+    activations.Venus = enrichActivation(addHouseInfo({
       longitude: venusLong,
       gate: venusActivation.gate,
       line: venusActivation.line,
@@ -282,7 +296,7 @@ async function calculateAllPlanets(julianDay) {
     // Calculate Mars
     const marsLong = await calculatePlanetPosition(julianDay, PLANETS.MARS);
     const marsActivation = safeGetGate(marsLong, 'Mars');
-    activations.Mars = enrichActivation({
+    activations.Mars = enrichActivation(addHouseInfo({
       longitude: marsLong,
       gate: marsActivation.gate,
       line: marsActivation.line,
@@ -295,7 +309,7 @@ async function calculateAllPlanets(julianDay) {
     // Calculate Jupiter
     const jupiterLong = await calculatePlanetPosition(julianDay, PLANETS.JUPITER);
     const jupiterActivation = safeGetGate(jupiterLong, 'Jupiter');
-    activations.Jupiter = enrichActivation({
+    activations.Jupiter = enrichActivation(addHouseInfo({
       longitude: jupiterLong,
       gate: jupiterActivation.gate,
       line: jupiterActivation.line,
@@ -308,7 +322,7 @@ async function calculateAllPlanets(julianDay) {
     // Calculate Saturn
     const saturnLong = await calculatePlanetPosition(julianDay, PLANETS.SATURN);
     const saturnActivation = safeGetGate(saturnLong, 'Saturn');
-    activations.Saturn = enrichActivation({
+    activations.Saturn = enrichActivation(addHouseInfo({
       longitude: saturnLong,
       gate: saturnActivation.gate,
       line: saturnActivation.line,
@@ -321,7 +335,7 @@ async function calculateAllPlanets(julianDay) {
     // Calculate Uranus
     const uranusLong = await calculatePlanetPosition(julianDay, PLANETS.URANUS);
     const uranusActivation = safeGetGate(uranusLong, 'Uranus');
-    activations.Uranus = enrichActivation({
+    activations.Uranus = enrichActivation(addHouseInfo({
       longitude: uranusLong,
       gate: uranusActivation.gate,
       line: uranusActivation.line,
@@ -334,7 +348,7 @@ async function calculateAllPlanets(julianDay) {
     // Calculate Neptune
     const neptuneLong = await calculatePlanetPosition(julianDay, PLANETS.NEPTUNE);
     const neptuneActivation = safeGetGate(neptuneLong, 'Neptune');
-    activations.Neptune = enrichActivation({
+    activations.Neptune = enrichActivation(addHouseInfo({
       longitude: neptuneLong,
       gate: neptuneActivation.gate,
       line: neptuneActivation.line,
@@ -347,7 +361,7 @@ async function calculateAllPlanets(julianDay) {
     // Calculate Pluto
     const plutoLong = await calculatePlanetPosition(julianDay, PLANETS.PLUTO);
     const plutoActivation = safeGetGate(plutoLong, 'Pluto');
-    activations.Pluto = enrichActivation({
+    activations.Pluto = enrichActivation(addHouseInfo({
       longitude: plutoLong,
       gate: plutoActivation.gate,
       line: plutoActivation.line,
@@ -364,20 +378,73 @@ async function calculateAllPlanets(julianDay) {
 }
 
 /**
- * Calculate Ascendant using Swiss Ephemeris house system
+ * House meanings and descriptions
  */
-async function calculateAscendant(julianDay, latitude, longitude) {
+const HOUSE_DESCRIPTIONS = {
+  1: 'Self, Identity & First Impressions - The mask you wear, physical appearance, how you approach life',
+  2: 'Money, Values & Possessions - Material resources, self-worth, what you value and attract',
+  3: 'Communication & Learning - Siblings, neighbors, short trips, daily communication, early education',
+  4: 'Home & Family - Roots, ancestry, emotional foundation, private life, mother/nurturing parent',
+  5: 'Creativity & Pleasure - Romance, children, creative expression, fun, speculation, joy',
+  6: 'Health & Service - Daily routines, work, health habits, service to others, pets',
+  7: 'Partnerships & Marriage - One-on-one relationships, marriage, business partners, open enemies',
+  8: 'Transformation & Shared Resources - Death/rebirth, sexuality, shared money, inheritance, deep transformation',
+  9: 'Philosophy & Travel - Higher learning, philosophy, long-distance travel, religion, publishing',
+  10: 'Career & Public Image - Career, reputation, achievements, father/authority figures, public life',
+  11: 'Friends & Community - Friendships, groups, hopes, wishes, humanitarian causes, social networks',
+  12: 'Spirituality & Hidden Matters - Subconscious, secrets, isolation, spirituality, hidden enemies, karma'
+};
+
+/**
+ * Calculate Ascendant and all house cusps using Swiss Ephemeris
+ */
+async function calculateHousesAndAscendant(julianDay, latitude, longitude) {
   return new Promise((resolve, reject) => {
     // Use Placidus house system (P)
     swisseph.swe_houses(julianDay, latitude, longitude, 'P', (result) => {
       if (result.error) {
         reject(new Error(result.error));
       } else {
-        // result.ascendant contains the Ascendant degree
-        resolve(result.ascendant);
+        // result.house contains cusps for houses 1-12 (index 1-12, 0 is unused)
+        // result.ascendant contains the Ascendant degree (same as house[1])
+        resolve({
+          ascendant: result.ascendant,
+          houseCusps: result.house
+        });
       }
     });
   });
+}
+
+/**
+ * Determine which house a given longitude falls into
+ */
+function getHouseNumber(longitude, houseCusps) {
+  // Normalize longitude to 0-360
+  let lon = longitude % 360;
+  if (lon < 0) lon += 360;
+
+  // Check each house
+  for (let i = 1; i <= 12; i++) {
+    const currentCusp = houseCusps[i];
+    const nextCusp = i === 12 ? houseCusps[1] : houseCusps[i + 1];
+
+    // Handle wrap-around at 0/360 degrees
+    if (currentCusp < nextCusp) {
+      // Normal case: house doesn't cross 0°
+      if (lon >= currentCusp && lon < nextCusp) {
+        return i;
+      }
+    } else {
+      // Wrap-around case: house crosses 0°
+      if (lon >= currentCusp || lon < nextCusp) {
+        return i;
+      }
+    }
+  }
+
+  // Fallback (should never happen)
+  return 1;
 }
 
 /**
@@ -457,13 +524,17 @@ async function calculateHumanDesign(params) {
       );
     });
 
-    // Calculate Personality (at birth)
-    const personality = await calculateAllPlanets(julianDay);
+    // Calculate houses for Personality (at birth time)
+    const housesData = await calculateHousesAndAscendant(julianDay, locationInfo.lat, locationInfo.lon);
+    const houseCusps = housesData.houseCusps;
+
+    // Calculate Personality (at birth) with house information
+    const personality = await calculateAllPlanets(julianDay, houseCusps);
 
     // Find Design date (88 degrees before Personality Sun)
     const designJulianDay = await findDesignDate(personality.Sun.longitude, julianDay);
 
-    // Calculate Design
+    // Calculate Design (without houses - Design is prenatal, houses are for birth time only)
     const design = await calculateAllPlanets(designJulianDay);
 
     // Calculate Profile (Personality Sun Line / Design Sun Line)
@@ -741,10 +812,10 @@ async function calculateHumanDesign(params) {
     const extras = {};
 
     try {
-      // Calculate Ascendant
-      const ascendantLong = await calculateAscendant(julianDay, locationInfo.lat, locationInfo.lon);
+      // Use already-calculated Ascendant from houses
+      const ascendantLong = housesData.ascendant;
       const ascendantActivation = safeGetGate(ascendantLong, 'Ascendant');
-      extras.ascendant = {
+      extras.ascendant = addHouseInfo({
         longitude: ascendantLong,
         gate: ascendantActivation.gate,
         line: ascendantActivation.line,
@@ -753,7 +824,7 @@ async function calculateHumanDesign(params) {
         base: ascendantActivation.base,
         sign: ascendantActivation.sign,
         description: 'Rising sign - the mask you wear, how others see you'
-      };
+      }, houseCusps);
 
       // Determine if day or night birth
       const isDay = await isDayBirth(julianDay, locationInfo.lat, locationInfo.lon);
@@ -764,7 +835,7 @@ async function calculateHumanDesign(params) {
 
       const pofDayNightActivation = safeGetGate(pofDayNight, 'Part of Fortune (Day/Night)');
       extras.partOfFortune = {
-        traditional: {
+        traditional: addHouseInfo({
           longitude: pofDayNight,
           gate: pofDayNightActivation.gate,
           line: pofDayNightActivation.line,
@@ -774,14 +845,14 @@ async function calculateHumanDesign(params) {
           sign: pofDayNightActivation.sign,
           formula: isDay ? 'Day: ASC + Moon - Sun' : 'Night: ASC + Sun - Moon',
           birthType: isDay ? 'day' : 'night'
-        },
+        }, houseCusps),
         description: 'Point of worldly success, luck, and abundance'
       };
 
       // Only add modern formula if different from traditional
       if (Math.abs(pofDayNight - pofAlwaysDay) > 0.01) {
         const pofAlwaysDayActivation = safeGetGate(pofAlwaysDay, 'Part of Fortune (Always Day)');
-        extras.partOfFortune.modern = {
+        extras.partOfFortune.modern = addHouseInfo({
           longitude: pofAlwaysDay,
           gate: pofAlwaysDayActivation.gate,
           line: pofAlwaysDayActivation.line,
@@ -790,13 +861,13 @@ async function calculateHumanDesign(params) {
           base: pofAlwaysDayActivation.base,
           sign: pofAlwaysDayActivation.sign,
           formula: 'Always Day: ASC + Moon - Sun'
-        };
+        }, houseCusps);
       }
 
       // Calculate Mean Black Moon Lilith
       const lilithLong = await calculatePlanetPosition(julianDay, PLANETS.MEAN_APOG);
       const lilithActivation = safeGetGate(lilithLong, 'Black Moon Lilith');
-      extras.blackMoonLilith = {
+      extras.blackMoonLilith = addHouseInfo({
         longitude: lilithLong,
         gate: lilithActivation.gate,
         line: lilithActivation.line,
@@ -806,21 +877,28 @@ async function calculateHumanDesign(params) {
         sign: lilithActivation.sign,
         type: 'Mean',
         description: 'Shadow self, repressed desires, the wild feminine'
-      };
+      }, houseCusps);
 
-      // Calculate Chiron
-      const chironLong = await calculatePlanetPosition(julianDay, PLANETS.CHIRON);
-      const chironActivation = safeGetGate(chironLong, 'Chiron');
-      extras.chiron = {
-        longitude: chironLong,
-        gate: chironActivation.gate,
-        line: chironActivation.line,
-        color: chironActivation.color,
-        tone: chironActivation.tone,
-        base: chironActivation.base,
-        sign: chironActivation.sign,
-        description: 'The wounded healer - where you heal yourself and others'
-      };
+      // Try to calculate Chiron (optional - requires additional ephemeris files)
+      try {
+        const chironLong = await calculatePlanetPosition(julianDay, PLANETS.CHIRON);
+        const chironActivation = safeGetGate(chironLong, 'Chiron');
+        extras.chiron = addHouseInfo({
+          longitude: chironLong,
+          gate: chironActivation.gate,
+          line: chironActivation.line,
+          color: chironActivation.color,
+          tone: chironActivation.tone,
+          base: chironActivation.base,
+          sign: chironActivation.sign,
+          description: 'The wounded healer - where you heal yourself and others'
+        }, houseCusps);
+      } catch (chironError) {
+        // Chiron calculation failed (likely missing ephemeris files)
+        extras.chiron = {
+          error: 'Chiron calculation unavailable (requires additional ephemeris files)'
+        };
+      }
 
     } catch (extrasError) {
       // If extras calculation fails, add error info but don't fail the whole calculation
@@ -861,7 +939,7 @@ async function calculateHumanDesign(params) {
       channels: channels.sort(),
       definedCenters: Array.from(definedCenters).sort(),
       extras,
-      version: '3.6.0-astrological-extras'
+      version: '3.7.0-houses-and-extras'
     };
 
   } catch (error) {
