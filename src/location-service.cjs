@@ -6,14 +6,10 @@
 const tzDB = require('./timezone-database.cjs');
 const googleMaps = require('./google-maps-service.cjs');
 
-// Cache for Google Maps lookups to avoid repeated API calls
-const locationCache = new Map();
-
 /**
  * Get location info with hybrid approach
  * 1. Try static database
- * 2. Check cache for previous Google Maps lookups
- * 3. Fall back to Google Maps API if enabled
+ * 2. Fall back to Google Maps API if enabled
  *
  * @param {string} locationString - Location name
  * @param {string} birthDate - Birth date (YYYY-MM-DD) for timezone calculation
@@ -43,17 +39,7 @@ async function getLocationInfo(locationString, birthDate, birthTime, options = {
     console.log(`Static DB lookup failed for "${locationString}":`, error.message);
   }
 
-  // 2. Check cache for previous Google Maps lookups
-  const cacheKey = `${locationString.toLowerCase()}-${birthDate}-${birthTime}`;
-  if (locationCache.has(cacheKey)) {
-    const cached = locationCache.get(cacheKey);
-    return {
-      ...cached,
-      source: 'cache'
-    };
-  }
-
-  // 3. Fall back to Google Maps API if enabled
+  // 2. Fall back to Google Maps API if enabled
   if (useGoogleMaps && googleMapsApiKey) {
     try {
       const result = await googleMaps.getCompleteLocationInfo(
@@ -63,20 +49,14 @@ async function getLocationInfo(locationString, birthDate, birthTime, options = {
         googleMapsApiKey
       );
 
-      const locationData = {
+      return {
         city: result.city,
         tz: result.tz,
         lat: result.lat,
         lon: result.lon,
         formattedAddress: result.formattedAddress,
-        timezoneName: result.timezoneName
-      };
-
-      // Cache the result
-      locationCache.set(cacheKey, locationData);
-
-      return {
-        ...locationData,
+        timezoneName: result.timezoneName,
+        offset: result.offset,
         source: 'google-maps-api'
       };
 
@@ -191,27 +171,8 @@ async function convertToUTC(birthDate, birthTime, locationString, options = {}) 
   }
 }
 
-/**
- * Clear the location cache (useful for testing or memory management)
- */
-function clearCache() {
-  locationCache.clear();
-}
-
-/**
- * Get cache statistics
- */
-function getCacheStats() {
-  return {
-    size: locationCache.size,
-    keys: Array.from(locationCache.keys())
-  };
-}
-
 module.exports = {
   getLocationInfo,
   getUTCOffset,
-  convertToUTC,
-  clearCache,
-  getCacheStats
+  convertToUTC
 };

@@ -516,7 +516,7 @@ async function calculateHumanDesign(params) {
       };
     } else {
       // Get location info using hybrid service (static DB + Google Maps fallback)
-      locationInfo = await getLocationInfo(birthLocation, birthDate, birthTime, locationOptions);
+      locationInfo = await getLocationInfo(birthLocation, birthDate, locationOptions);
       if (!locationInfo) {
         throw new Error(`Location not found: ${birthLocation}`);
       }
