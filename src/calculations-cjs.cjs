@@ -534,8 +534,8 @@ async function calculateHumanDesign(params) {
     // Find Design date (88 degrees before Personality Sun)
     const designJulianDay = await findDesignDate(personality.Sun.longitude, julianDay);
 
-    // Calculate Design (without houses - Design is prenatal, houses are for birth time only)
-    const design = await calculateAllPlanets(designJulianDay);
+    // Calculate Design with birth-time houses (shows where Design energies express in life)
+    const design = await calculateAllPlanets(designJulianDay, houseCusps);
 
     // Calculate Profile (Personality Sun Line / Design Sun Line)
     const profile = `${personality.Sun.line}/${design.Sun.line}`;
