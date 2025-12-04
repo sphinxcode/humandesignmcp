@@ -29,7 +29,9 @@ const PLANETS = {
   URANUS: 7,     // swisseph.SE_URANUS
   NEPTUNE: 8,    // swisseph.SE_NEPTUNE
   PLUTO: 9,      // swisseph.SE_PLUTO
-  TRUE_NODE: 11  // swisseph.SE_TRUE_NODE (Rahu/North Node)
+  TRUE_NODE: 11, // swisseph.SE_TRUE_NODE (Rahu/North Node)
+  MEAN_APOG: 12, // swisseph.SE_MEAN_APOG (Mean Black Moon Lilith)
+  CHIRON: 15     // swisseph.SE_CHIRON
 };
 
 /**
@@ -362,6 +364,66 @@ async function calculateAllPlanets(julianDay) {
 }
 
 /**
+ * Calculate Ascendant using Swiss Ephemeris house system
+ */
+async function calculateAscendant(julianDay, latitude, longitude) {
+  return new Promise((resolve, reject) => {
+    // Use Placidus house system (P)
+    swisseph.swe_houses(julianDay, latitude, longitude, 'P', (result) => {
+      if (result.error) {
+        reject(new Error(result.error));
+      } else {
+        // result.ascendant contains the Ascendant degree
+        resolve(result.ascendant);
+      }
+    });
+  });
+}
+
+/**
+ * Calculate Part of Fortune
+ * Day formula: ASC + Moon - Sun
+ * Night formula: ASC + Sun - Moon
+ */
+function calculatePartOfFortune(ascendant, sunLong, moonLong, isDayBirth) {
+  let pof;
+  if (isDayBirth) {
+    // Day birth: ASC + Moon - Sun
+    pof = ascendant + moonLong - sunLong;
+  } else {
+    // Night birth: ASC + Sun - Moon
+    pof = ascendant + sunLong - moonLong;
+  }
+
+  // Normalize to 0-360 range
+  while (pof < 0) pof += 360;
+  while (pof >= 360) pof -= 360;
+
+  return pof;
+}
+
+/**
+ * Determine if birth is during day or night
+ * Day = Sun above horizon (Sun's altitude > 0)
+ */
+async function isDayBirth(julianDay, latitude, longitude) {
+  return new Promise((resolve, reject) => {
+    // Calculate Sun's position including altitude
+    swisseph.swe_calc_ut(julianDay, PLANETS.SUN, swisseph.SEFLG_MOSEPH | swisseph.SEFLG_EQUATORIAL, (result) => {
+      if (result.error) {
+        reject(new Error(result.error));
+      } else {
+        // Get Sun's altitude using azalt
+        swisseph.swe_azalt(julianDay, swisseph.SE_EQU2HOR, [longitude, latitude, 0], 0, 0, [result.longitude, result.latitude], (azalt) => {
+          // azalt.altitude > 0 means Sun is above horizon (day)
+          resolve(azalt.trueAltitude > 0);
+        });
+      }
+    });
+  });
+}
+
+/**
  * Calculate complete Human Design chart
  */
 async function calculateHumanDesign(params) {
@@ -675,6 +737,96 @@ async function calculateHumanDesign(params) {
     // Perspective is based on Personality Rahu (North Node) Color
     const perspective = PHS_MAPPINGS.perspective[personality.Rahu.color];
 
+    // Calculate astrological extras
+    const extras = {};
+
+    try {
+      // Calculate Ascendant
+      const ascendantLong = await calculateAscendant(julianDay, locationInfo.lat, locationInfo.lon);
+      const ascendantActivation = safeGetGate(ascendantLong, 'Ascendant');
+      extras.ascendant = {
+        longitude: ascendantLong,
+        gate: ascendantActivation.gate,
+        line: ascendantActivation.line,
+        color: ascendantActivation.color,
+        tone: ascendantActivation.tone,
+        base: ascendantActivation.base,
+        sign: ascendantActivation.sign,
+        description: 'Rising sign - the mask you wear, how others see you'
+      };
+
+      // Determine if day or night birth
+      const isDay = await isDayBirth(julianDay, locationInfo.lat, locationInfo.lon);
+
+      // Calculate Part of Fortune (both formulas)
+      const pofDayNight = calculatePartOfFortune(ascendantLong, personality.Sun.longitude, personality.Moon.longitude, isDay);
+      const pofAlwaysDay = calculatePartOfFortune(ascendantLong, personality.Sun.longitude, personality.Moon.longitude, true);
+
+      const pofDayNightActivation = safeGetGate(pofDayNight, 'Part of Fortune (Day/Night)');
+      extras.partOfFortune = {
+        traditional: {
+          longitude: pofDayNight,
+          gate: pofDayNightActivation.gate,
+          line: pofDayNightActivation.line,
+          color: pofDayNightActivation.color,
+          tone: pofDayNightActivation.tone,
+          base: pofDayNightActivation.base,
+          sign: pofDayNightActivation.sign,
+          formula: isDay ? 'Day: ASC + Moon - Sun' : 'Night: ASC + Sun - Moon',
+          birthType: isDay ? 'day' : 'night'
+        },
+        description: 'Point of worldly success, luck, and abundance'
+      };
+
+      // Only add modern formula if different from traditional
+      if (Math.abs(pofDayNight - pofAlwaysDay) > 0.01) {
+        const pofAlwaysDayActivation = safeGetGate(pofAlwaysDay, 'Part of Fortune (Always Day)');
+        extras.partOfFortune.modern = {
+          longitude: pofAlwaysDay,
+          gate: pofAlwaysDayActivation.gate,
+          line: pofAlwaysDayActivation.line,
+          color: pofAlwaysDayActivation.color,
+          tone: pofAlwaysDayActivation.tone,
+          base: pofAlwaysDayActivation.base,
+          sign: pofAlwaysDayActivation.sign,
+          formula: 'Always Day: ASC + Moon - Sun'
+        };
+      }
+
+      // Calculate Mean Black Moon Lilith
+      const lilithLong = await calculatePlanetPosition(julianDay, PLANETS.MEAN_APOG);
+      const lilithActivation = safeGetGate(lilithLong, 'Black Moon Lilith');
+      extras.blackMoonLilith = {
+        longitude: lilithLong,
+        gate: lilithActivation.gate,
+        line: lilithActivation.line,
+        color: lilithActivation.color,
+        tone: lilithActivation.tone,
+        base: lilithActivation.base,
+        sign: lilithActivation.sign,
+        type: 'Mean',
+        description: 'Shadow self, repressed desires, the wild feminine'
+      };
+
+      // Calculate Chiron
+      const chironLong = await calculatePlanetPosition(julianDay, PLANETS.CHIRON);
+      const chironActivation = safeGetGate(chironLong, 'Chiron');
+      extras.chiron = {
+        longitude: chironLong,
+        gate: chironActivation.gate,
+        line: chironActivation.line,
+        color: chironActivation.color,
+        tone: chironActivation.tone,
+        base: chironActivation.base,
+        sign: chironActivation.sign,
+        description: 'The wounded healer - where you heal yourself and others'
+      };
+
+    } catch (extrasError) {
+      // If extras calculation fails, add error info but don't fail the whole calculation
+      extras.error = `Some extras could not be calculated: ${extrasError.message}`;
+    }
+
     return {
       birthInfo: {
         date: birthDate,
@@ -708,7 +860,8 @@ async function calculateHumanDesign(params) {
       design,
       channels: channels.sort(),
       definedCenters: Array.from(definedCenters).sort(),
-      version: '3.5.0-proper-tone-names'
+      extras,
+      version: '3.6.0-astrological-extras'
     };
 
   } catch (error) {
