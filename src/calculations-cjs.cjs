@@ -688,7 +688,7 @@ async function calculateHumanDesign(params) {
       type = 'Manifesting Generator';
     } else if (hasSacral) {
       type = 'Generator';
-    } else if (hasMotor && hasThroat) {
+    } else if (motorToThroat) {
       type = 'Manifestor';
     } else if (definedCenters.size > 0 && !hasSacral) {
       type = 'Projector';

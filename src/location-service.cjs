@@ -136,18 +136,51 @@ async function convertToUTC(birthDate, birthTime, locationString, options = {}) 
     };
   } catch (error) {
     // Fallback to manual conversion using offset
+    // Important: Don't use JavaScript Date parsing as it uses server's local timezone
+    // Instead, manually calculate UTC time from local time and offset
     const offset = locationInfo.offset || 0;
+    const [year, month, day] = birthDate.split('-').map(Number);
     const [hour, minute] = birthTime.split(':').map(Number);
 
-    const localDate = new Date(`${birthDate}T${birthTime}:00`);
-    const utcDate = new Date(localDate.getTime() - offset * 3600000);
+    // Convert to UTC: UTC = LocalTime - Offset
+    // For example: Austin 12:00 with offset -5 (CDT) = UTC 17:00
+    let utcHour = hour - offset;
+    let utcDay = day;
+    let utcMonth = month;
+    let utcYear = year;
+
+    // Handle day boundaries
+    if (utcHour < 0) {
+      utcHour += 24;
+      utcDay--;
+      if (utcDay < 1) {
+        utcMonth--;
+        if (utcMonth < 1) {
+          utcMonth = 12;
+          utcYear--;
+        }
+        utcDay = new Date(utcYear, utcMonth, 0).getDate();
+      }
+    } else if (utcHour >= 24) {
+      utcHour -= 24;
+      utcDay++;
+      const daysInMonth = new Date(utcYear, utcMonth, 0).getDate();
+      if (utcDay > daysInMonth) {
+        utcDay = 1;
+        utcMonth++;
+        if (utcMonth > 12) {
+          utcMonth = 1;
+          utcYear++;
+        }
+      }
+    }
 
     return {
-      utcYear: utcDate.getUTCFullYear(),
-      utcMonth: utcDate.getUTCMonth() + 1,
-      utcDay: utcDate.getUTCDate(),
-      utcHour: utcDate.getUTCHours(),
-      utcMinute: utcDate.getUTCMinutes(),
+      utcYear,
+      utcMonth,
+      utcDay,
+      utcHour,
+      utcMinute: minute,
       offset: offset,
       originalLocalTime: birthTime,
       source: 'google-maps-api'
