@@ -149,10 +149,13 @@ function longitudeToGate(longitude) {
   // Calculate percentage through the wheel
   const percentageThrough = hdDegrees / 360;
 
-  // Get gate index (0-63) and line (1-6)
+  // Get gate index (0-63), line (1-6), color (1-6), tone (1-6), base (1-5)
   const gateIndex = Math.floor(percentageThrough * 64);
   const gate = GATE_ORDER[gateIndex];
   const line = (Math.floor(percentageThrough * 384) % 6) + 1;
+  const color = (Math.floor(percentageThrough * 2304) % 6) + 1;
+  const tone = (Math.floor(percentageThrough * 13824) % 6) + 1;
+  const base = (Math.floor(percentageThrough * 69120) % 5) + 1;
 
   // Determine zodiac sign
   const signNum = Math.floor(normalizedLon / 30);
@@ -162,6 +165,9 @@ function longitudeToGate(longitude) {
   return {
     gate: gate,
     line: line,
+    color: color,
+    tone: tone,
+    base: base,
     sign: sign,
     signNum: signNum + 1, // 1-based for compatibility
     degreeInSign: degreeInSign,

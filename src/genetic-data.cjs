@@ -472,7 +472,7 @@ const exaltationsDetriments = {
  * Enrich a planetary activation with genetic data
  */
 function enrichActivation(activation, planetName) {
-  const { gate, line } = activation;
+  const { gate, line, color, tone, base } = activation;
   const gateKey = `${gate}.${line}`;
 
   // Get amino acid data
@@ -497,6 +497,9 @@ function enrichActivation(activation, planetName) {
 
   const result = {
     ...activation,
+    color,
+    tone,
+    base,
     aminoAcid: aminoData.name || null,
     codonRing: aminoData.ring || null,
     codon: codon

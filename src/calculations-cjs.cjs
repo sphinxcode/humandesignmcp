@@ -33,6 +33,64 @@ const PLANETS = {
 };
 
 /**
+ * PHS and Rave Psychology mappings based on Color
+ */
+const PHS_MAPPINGS = {
+  digestion: {
+    1: 'Appetite',
+    2: 'Taste',
+    3: 'Thirst',
+    4: 'Touch',
+    5: 'Sound',
+    6: 'Light'
+  },
+  digestionType: {
+    left: { 1: 'Consecutive', 2: 'Open', 3: 'Hot', 4: 'Calm', 5: 'High', 6: 'Direct' },
+    right: { 1: 'Alternating', 2: 'Closed', 3: 'Cold', 4: 'Nervous', 5: 'Low', 6: 'Indirect' }
+  },
+  environment: {
+    1: 'Caves',
+    2: 'Markets',
+    3: 'Kitchens',
+    4: 'Mountains',
+    5: 'Valleys',
+    6: 'Shores'
+  },
+  environmentType: {
+    left: { 1: 'Selective', 2: 'Internal', 3: 'Wet', 4: 'Active', 5: 'Narrow', 6: 'Natural' },
+    right: { 1: 'Blending', 2: 'External', 3: 'Dry', 4: 'Passive', 5: 'Wide', 6: 'Artificial' }
+  },
+  motivation: {
+    1: 'Fear',
+    2: 'Hope',
+    3: 'Desire',
+    4: 'Need',
+    5: 'Guilt',
+    6: 'Innocence'
+  },
+  perspective: {
+    1: 'Survival',
+    2: 'Possibility',
+    3: 'Power',
+    4: 'Wanting',
+    5: 'Probability',
+    6: 'Personal'
+  }
+};
+
+/**
+ * Environmental Tone mappings based on Tone
+ */
+const ENVIRONMENTAL_TONES = {
+  1: 'Smell',
+  2: 'Taste',
+  3: 'Outer Vision',
+  4: 'Inner Vision',
+  5: 'Feeling',
+  6: 'Touch'
+};
+
+/**
  * Calculate planetary position using Swiss Ephemeris
  */
 function calculatePlanetPosition(julianDay, planet) {
@@ -534,6 +592,33 @@ async function calculateHumanDesign(params) {
       '6/3': 'Role Model Martyr'
     };
 
+    // Calculate Variable Type (16 types: PLR DLR, PLL DLL, etc.)
+    // Based on tones of Personality Sun, Personality Rahu, Design Sun, Design Ketu
+    const variableType = `P${personality.Sun.tone < 4 ? 'L' : 'R'}${personality.Rahu.tone < 4 ? 'L' : 'R'} D${design.Sun.tone < 4 ? 'L' : 'R'}${design.Ketu.tone < 4 ? 'L' : 'R'}`;
+
+    // Calculate PHS (Primary Health System)
+    // Digestion is based on Design Sun Color
+    const designSunColorSide = design.Sun.tone < 4 ? 'left' : 'right';
+    const digestionBase = PHS_MAPPINGS.digestion[design.Sun.color];
+    const digestionType = PHS_MAPPINGS.digestionType[designSunColorSide][design.Sun.color];
+    const digestion = `${digestionType} ${digestionBase}`;
+
+    // Environment is based on Design Ketu (South Node) Color
+    const designKetuColorSide = design.Ketu.tone < 4 ? 'left' : 'right';
+    const environmentBase = PHS_MAPPINGS.environment[design.Ketu.color];
+    const environmentType = PHS_MAPPINGS.environmentType[designKetuColorSide][design.Ketu.color];
+    const environment = `${environmentType} ${environmentBase}`;
+
+    // Environmental Tone is based on Design Ketu (South Node) Tone
+    const environmentalTone = ENVIRONMENTAL_TONES[design.Ketu.tone];
+
+    // Calculate Rave Psychology
+    // Motivation is based on Personality Sun Color
+    const motivation = PHS_MAPPINGS.motivation[personality.Sun.color];
+
+    // Perspective is based on Personality Rahu (North Node) Color
+    const perspective = PHS_MAPPINGS.perspective[personality.Rahu.color];
+
     return {
       birthInfo: {
         date: birthDate,
@@ -550,11 +635,21 @@ async function calculateHumanDesign(params) {
       profile,
       profileName: profileNames[profile] || profile,
       incarnationCross,
+      variableType,
+      phs: {
+        digestion,
+        environment,
+        environmentalTone
+      },
+      ravePsychology: {
+        motivation,
+        perspective
+      },
       personality,
       design,
       channels: channels.sort(),
       definedCenters: Array.from(definedCenters).sort(),
-      version: '3.2.0-with-genetic-data'
+      version: '3.3.0-complete-with-genetic-data'
     };
 
   } catch (error) {
