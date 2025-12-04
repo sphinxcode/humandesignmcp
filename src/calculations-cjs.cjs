@@ -638,18 +638,21 @@ async function calculateHumanDesign(params) {
       variableType,
       phs: {
         digestion,
+        digestionTone: design.Sun.tone,
         environment,
         environmentalTone
       },
       ravePsychology: {
         motivation,
-        perspective
+        motivationTone: personality.Sun.tone,
+        perspective,
+        perspectiveTone: personality.Rahu.tone
       },
       personality,
       design,
       channels: channels.sort(),
       definedCenters: Array.from(definedCenters).sort(),
-      version: '3.3.0-complete-with-genetic-data'
+      version: '3.3.1-complete-with-tones'
     };
 
   } catch (error) {
