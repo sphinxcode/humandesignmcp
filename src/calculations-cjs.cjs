@@ -79,38 +79,16 @@ const PHS_MAPPINGS = {
 };
 
 /**
- * Motivation Trajectory Mappings (Color + Tone determines trajectory)
+ * Environmental Tone mappings based on Tone
  */
-const MOTIVATION_TRAJECTORIES = {
-  // Fear (Color 1)
-  1: { left: { start: 'Separatist', end: 'Communalist' }, right: { start: 'Communalist', end: 'Separatist' } },
-  // Hope (Color 2)
-  2: { left: { start: 'Anti-Theist', end: 'Theist' }, right: { start: 'Theist', end: 'Anti-Theist' } },
-  // Desire (Color 3)
-  3: { left: { start: 'Follower', end: 'Leader' }, right: { start: 'Leader', end: 'Follower' } },
-  // Need (Color 4)
-  4: { left: { start: 'Novice', end: 'Master' }, right: { start: 'Master', end: 'Novice' } },
-  // Guilt (Color 5)
-  5: { left: { start: 'Conditioned', end: 'Conditioner' }, right: { start: 'Conditioner', end: 'Conditioned' } },
-  // Innocence (Color 6)
-  6: { left: { start: 'Observed', end: 'Observer' }, right: { start: 'Observer', end: 'Observed' } }
+const ENVIRONMENTAL_TONES = {
+  1: 'Smell',
+  2: 'Taste',
+  3: 'Outer Vision',
+  4: 'Inner Vision',
+  5: 'Feeling',
+  6: 'Touch'
 };
-
-/**
- * Get motivation trajectory name based on color and tone
- */
-function getMotivationTrajectory(color, tone) {
-  const side = tone < 4 ? 'left' : 'right';
-  const trajectory = MOTIVATION_TRAJECTORIES[color][side];
-  return `${trajectory.start} → ${trajectory.end}`;
-}
-
-/**
- * Get digestion/determination tone orientation
- */
-function getDigestionToneOrientation(tone) {
-  return tone < 4 ? 'Strategic' : 'Receptive';
-}
 
 /**
  * Calculate planetary position using Swiss Ephemeris
@@ -670,16 +648,15 @@ async function calculateHumanDesign(params) {
     const environmentType = PHS_MAPPINGS.environmentType[designKetuColorSide][design.Ketu.color];
     const environment = `${environmentType} ${environmentBase}`;
 
+    // Environmental Tone is based on Design Ketu (South Node) Tone
+    const environmentalTone = ENVIRONMENTAL_TONES[design.Ketu.tone];
+
     // Calculate Rave Psychology
     // Motivation is based on Personality Sun Color
     const motivation = PHS_MAPPINGS.motivation[personality.Sun.color];
 
     // Perspective is based on Personality Rahu (North Node) Color
     const perspective = PHS_MAPPINGS.perspective[personality.Rahu.color];
-
-    // Get tone orientations and trajectories
-    const digestionTone = getDigestionToneOrientation(design.Sun.tone);
-    const motivationTone = getMotivationTrajectory(personality.Sun.color, personality.Sun.tone);
 
     return {
       birthInfo: {
@@ -700,19 +677,21 @@ async function calculateHumanDesign(params) {
       variableType,
       phs: {
         digestion,
-        digestionTone,
-        environment
+        digestionTone: design.Sun.tone,
+        environment,
+        environmentalTone
       },
       ravePsychology: {
         motivation,
-        motivationTone,
-        perspective
+        motivationTone: personality.Sun.tone,
+        perspective,
+        perspectiveTone: personality.Rahu.tone
       },
       personality,
       design,
       channels: channels.sort(),
       definedCenters: Array.from(definedCenters).sort(),
-      version: '3.5.0-tone-names'
+      version: '3.4.0-correct-phs-and-variables'
     };
 
   } catch (error) {
